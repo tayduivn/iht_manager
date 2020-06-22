@@ -3,10 +3,13 @@ import { Form, Input, Button, Layout } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import "antd/dist/antd.css";
 import "./login.css";
+import {useHistory} from 'react-router-dom'
 
 const LoginPage = () => {
+  let history = useHistory()
   const onFinish = (values) => {
     console.log("Received values of form: ", values);
+    history.push('/dasboard')
   };
 
   return (

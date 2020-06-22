@@ -1,7 +1,7 @@
 import React from "react";
 import { Route } from "react-router-dom";
 
-const RouterWithSubRoutes = (route) => {
+export const RouterWithSubRoutes = (route) => {
   return (
     <Route
       path={route.path}
@@ -9,5 +9,3 @@ const RouterWithSubRoutes = (route) => {
     />
   );
 };
-
-export default RouterWithSubRoutes;

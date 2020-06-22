@@ -1,11 +1,6 @@
 import React from "react";
-import { Layout } from "antd";
-import LayoutPage from "./Layout";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import HomePage from "./Pages/HomePage";
-import NotFoundPage from "./Pages/NotFoundPage";
-import LoginPage from "./Pages/LoginPage";
-import RouterWithSubRoutes from "./utils/RouterWithSubRoutes";
+import { BrowserRouter as Router, Switch } from "react-router-dom";
+import {RouterWithSubRoutes} from "./utils/RouterWithSubRoutes";
 import routes from "./routes";
 
 const App = () => {

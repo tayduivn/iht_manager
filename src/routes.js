@@ -1,38 +1,62 @@
-import React from "react";
 import BasicDataPage from "./Pages/BasicDataPage";
 import NotFoundPage from "./Pages/NotFoundPage";
 import HomePage from "./Pages/HomePage";
-import { Layout } from "antd";
 import LayoutPage from "./Layout";
 import LoginPage from "./Pages/LoginPage";
+import ManageFilePage from "./Pages/ManageFilePage";
+import InformationCompany from "./Pages/BasicDataPage/InformationCompany";
+import InformationCustomer from "./Pages/BasicDataPage/InformationCustomer";
 
 const routes = [
   {
-    path: "/index",
-    component: HomePage
+    path: "/home",
+    component: HomePage,
   },
   {
-    path: '/dasboard',
+    path: "/dasboard",
     component: LayoutPage,
     routes: [
       {
-        path: '/dasboard/dulieucoban',
-        component: BasicDataPage
+        name: "Dữ Liệu Cơ Bản",
+        path: "/dasboard/dulieucoban",
+        component: BasicDataPage,
+        routes: [
+          {
+            name: "Thông Tin Công Ty",
+            path: "/dasboard/dulieucoban/thongtincongty",
+            component: InformationCompany,
+          },
+          {
+            name: "Thông Tin Khách Hàng",
+            path: "/dasboard/dulieucoban/thongtinkhachhang",
+            component: InformationCustomer,
+          },
+        ],
       },
       {
-        path: '',
-        component: NotFoundPage
-      }
-    ]
+        name: "Quản Lý Hồ Sơ",
+        path: "/dasboard/quanlyhoso",
+        component: ManageFilePage,
+      },
+      {
+        name: "Quản Lý Thu Chi",
+        path: "/dasboard/quanlythuchi",
+        component: ManageFilePage,
+      },
+      // {
+      //   path: "",
+      //   component: NotFoundPage,
+      // },
+    ],
   },
   {
-    path: '/login',
-    component: LoginPage
+    path: "/login",
+    component: LoginPage,
   },
   {
-    path: '',
-    component: NotFoundPage
-  }
+    path: "",
+    component: NotFoundPage,
+  },
 ];
 
 export default routes;

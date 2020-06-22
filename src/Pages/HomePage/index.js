@@ -1,10 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./home.css";
 import "animate.css";
 import logo from "../../assets/logo IHT.png";
 import background from "../../assets/background.jpg";
+import { useHistory } from "react-router-dom";
 
 const HomePage = () => {
+  let history = useHistory();
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      history.push("/login");
+    }, 1000);
+    return () => {
+      clearTimeout(timer);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div
       className="content"
@@ -16,7 +28,6 @@ const HomePage = () => {
         backgroundRepeat: "no-repeat",
       }}
     >
-      {/* <h1 className='animate__animated animate__zoomInDown' style={{color: 'red', fontSize: "60px"}}>IHT Logictics</h1> */}
       <img
         className="animate__animated animate__zoomInDown"
         src={logo}

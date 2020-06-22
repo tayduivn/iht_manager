@@ -3,12 +3,17 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
-// import LoginPage from "./Pages/LoginPage";
+import { createStore, applyMiddleware } from "redux";
+import allReducer from "./reducers";
+import thunk from "redux-thunk";
+import {Provider} from 'react-redux'
 
+const store = createStore(allReducer, applyMiddleware(thunk));
 
 ReactDOM.render(
-  <App />,
-  // <LoginPage />,
+  <Provider store={store}>
+    <App />
+  </Provider>,
 
   document.getElementById("root")
 );

@@ -1,24 +1,18 @@
-import React, { useState } from "react";
+import React from "react";
 import "antd/dist/antd.css";
 import { Layout, Menu } from "antd";
+import MenuItem from "../MenuItem";
 const { Sider } = Layout;
 
-const SiderCustom = () => {
+const SiderCustom = (routes) => {
   return (
-    <Sider
-      className="site-layout-background"
-      width={200}
-    >
+    <Sider className="site-layout-background" width={250}>
       <Menu
         mode="inline"
-        defaultSelectedKeys={["1"]}
-        // defaultOpenKeys={["sub1"]}
+        defaultSelectedKeys={["0"]}
         style={{ height: "100%" }}
       >
-        {/* <SubMenu key="sub1" icon={<UserOutlined />} title="subnav 1"> */}
-        <Menu.Item key="1">Thông tin công ty</Menu.Item>
-        <Menu.Item key="2">Thông tin chi nhánh</Menu.Item>
-        {/* </SubMenu> */}
+        {MenuItem(routes)}
       </Menu>
     </Sider>
   );
