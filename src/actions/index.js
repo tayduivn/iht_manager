@@ -1,6 +1,11 @@
 import api from "../utils/api";
 
-const { FETCH_CUSTOMERS, SEARCH } = require("./actionTypes");
+const {
+  FETCH_CUSTOMERS,
+  SEARCH,
+  OPEN_DRAWER,
+  CLOSE_DRAWER,
+} = require("./actionTypes");
 
 export const actFectCustomers = (customers) => {
   return {
@@ -21,5 +26,17 @@ export const actSearch = (searchs) => {
   return {
     type: SEARCH,
     searchs,
+  };
+};
+
+export const actOpenDrawer = () => {
+  return {
+    type: OPEN_DRAWER,
+  };
+};
+
+export const actCloseDrawer = () => {
+  return {
+    type: CLOSE_DRAWER,
   };
 };

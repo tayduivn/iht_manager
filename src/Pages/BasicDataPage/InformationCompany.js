@@ -3,6 +3,7 @@ import { Input, Form } from "antd";
 import api from "../../utils/api";
 import "./InformationCompany.css";
 
+
 const InformationCompany = () => {
   const [state, setState] = useState({});
   const getInformation = () => {

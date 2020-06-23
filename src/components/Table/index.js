@@ -21,7 +21,6 @@ const TableCustom = (data, columns) => {
       return _.toLower(o.CUST_NO).indexOf(_.toLower(searchs.keyword)) !== -1;
     });
   }
-
   return (
     <Table
       rowKey={columns[0].key}

@@ -1,15 +1,17 @@
 import React, { useEffect, Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { actFectCustomersRequeset } from "../../actions/index";
+import { actFectCustomersRequeset, actOpenDrawer } from "../../actions/index";
 import TableCustom from "../../components/Table";
 import { Space, Button } from "antd";
 import "./InformationCompany.css";
 import Search from "../../components/Search/index";
+import DrawerCustom from "../../components/Drawer";
 
 const InformationCustomer = () => {
   const customers = useSelector((state) => state.getData);
   const dispatch = useDispatch();
   const fetchCustomers = () => dispatch(actFectCustomersRequeset());
+  const openDrawer = () => dispatch(actOpenDrawer());
 
   useEffect(() => {
     fetchCustomers();
@@ -38,8 +40,14 @@ const InformationCustomer = () => {
       render: (text, record) => (
         <Space size="middle">
           {/* <a href=' '>Invite {record.name}</a> */}
-          <Button type="primary" onClick={(e) => console.log(record.CUST_NO)}>
-            Delete
+          <Button
+            type="primary"
+            onClick={(e) => {
+              openDrawer();
+              // console.log(record.CUST_NO);
+            }}
+          >
+            Xem
           </Button>
         </Space>
       ),
@@ -69,6 +77,7 @@ const InformationCustomer = () => {
     <Fragment>
       {Search(searchs)}
       {TableCustom(customers, columns)}
+      {DrawerCustom()}
     </Fragment>
   );
 };
