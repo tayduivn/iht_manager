@@ -1,6 +1,6 @@
 import Axios from "axios";
 
-const URL = "https://job.ihtvn.com/api/v1/";
+const URL = "https://job-api.ihtvn.com/api/v1/";
 
 const api = (endpoint, method = "GET", body) => {
   return Axios({

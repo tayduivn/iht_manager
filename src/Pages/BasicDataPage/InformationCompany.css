@@ -3,3 +3,8 @@
     color: red;
     font-size: 10;
 }
+
+.gutter-box {
+    padding: 8px 0;
+    background: #00a0e9;
+  }

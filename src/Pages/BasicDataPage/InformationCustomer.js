@@ -1,7 +1,10 @@
-import React, { useEffect } from "react";
-import { Table  } from "antd";
+import React, { useEffect, Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { actFectCustomersRequeset } from "../../actions/index";
+import TableCustom from "../../components/Table";
+import { Space, Button } from "antd";
+import "./InformationCompany.css";
+import Search from "../../components/Search/index";
 
 const InformationCustomer = () => {
   const customers = useSelector((state) => state.getData);
@@ -25,19 +28,48 @@ const InformationCustomer = () => {
       key: "CUST_NAME",
     },
     {
-      title: "Địa Chỉ",
-      dataIndex: "CUST_ADDRESS",
-      key: "CUST_ADDRESS",
+      title: "Điện Thoại 1",
+      dataIndex: "CUST_TEL1",
+      key: "CUST_TEL1",
+    },
+    {
+      title: "",
+      key: "CUST_NO",
+      render: (text, record) => (
+        <Space size="middle">
+          {/* <a href=' '>Invite {record.name}</a> */}
+          <Button type="primary" onClick={(e) => console.log(record.CUST_NO)}>
+            Delete
+          </Button>
+        </Space>
+      ),
+    },
+  ];
+
+  const searchs = [
+    {
+      label: "Loại (Kinds)",
+      selects: [
+        {
+          text: "Mã Khách Hàng",
+          value: "CUST_TYPE",
+        },
+        {
+          text: "Tên Khách Hàng",
+          value: "CUST_NAME",
+        },
+      ],
+    },
+    {
+      label: "Nội Dung (Contents)",
     },
   ];
 
   return (
-    <Table
-      rowKey={"CUST_NO"}
-      dataSource={customers }
-      columns={columns}
-      pagination
-    />
+    <Fragment>
+      {Search(searchs)}
+      {TableCustom(customers, columns)}
+    </Fragment>
   );
 };
 
