@@ -16,7 +16,7 @@ export const actFectCustomers = (customers) => {
 
 export const actFectCustomersRequeset = () => {
   return (dispatch) => {
-    return api("data-basic/list-customer", "GET", null).then((res) => {
+    return api("data-basic/customer", "GET", null).then((res) => {
       dispatch(actFectCustomers(res.data.data));
     });
   };
