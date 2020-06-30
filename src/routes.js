@@ -6,10 +6,16 @@ import LoginPage from "./Pages/LoginPage";
 import ManageFilePage from "./Pages/ManageFilePage";
 import InformationCompany from "./Pages/BasicDataPage/InformationCompany";
 import InformationCustomer from "./Pages/BasicDataPage/InformationCustomer";
+import InformationStaff from "./Pages/BasicDataPage/InformationStaff";
+import ListCost from "./Pages/BasicDataPage/ListCost";
+import ListCarriers from "./Pages/BasicDataPage/ListCarriers";
+import ListAgents from "./Pages/BasicDataPage/ListAgent";
+import InformationBrand from "./Pages/BasicDataPage/InformationBrand";
 
 const routes = [
   {
-    path: "/home",
+    path: "/",
+    exact: true,
     component: HomePage,
   },
   {
@@ -31,6 +37,31 @@ const routes = [
             path: "/dasboard/dulieucoban/thongtinkhachhang",
             component: InformationCustomer,
           },
+          {
+            name: "Danh Sách Nhân Viên",
+            path: "/dasboard/dulieucoban/danhsachnhanvien",
+            component: InformationStaff,
+          },
+          {
+            name: "Thông Tin Các Loại Chi Phí",
+            path: "/dasboard/dulieucoban/danhsachcacloaichiphi",
+            component: ListCost,
+          },
+          {
+            name: "Danh Mục Hãng Tàu",
+            path: "/dasboard/dulieucoban/danhmuchangtau",
+            component: ListCarriers,
+          },
+          {
+            name: "Danh Mục Đại Lý",
+            path: "/dasboard/dulieucoban/danhmucdaily",
+            component: ListAgents,
+          },
+          {
+            name: "Thông Tin Chi Nhánh",
+            path: "/dasboard/dulieucoban/thongtinchinahnh",
+            component: InformationBrand,
+          },
         ],
       },
       {
@@ -43,10 +74,10 @@ const routes = [
         path: "/dasboard/quanlythuchi",
         component: ManageFilePage,
       },
-      // {
-      //   path: "",
-      //   component: NotFoundPage,
-      // },
+      {
+        path: "",
+        component: NotFoundPage,
+      },
     ],
   },
   {
@@ -54,7 +85,7 @@ const routes = [
     component: LoginPage,
   },
   {
-    path: "",
+    path: "*",
     component: NotFoundPage,
   },
 ];

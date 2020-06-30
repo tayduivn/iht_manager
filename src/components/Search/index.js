@@ -22,12 +22,13 @@ const Search = (searchs) => {
 
   function handleSelect(value) {
     if (value === undefined) {
-      return setKinds("CUST_NO");
-    } else return setKinds(value);
+      return setKinds(searchs[0].selects[0].value);
+    } else if (value) return setKinds(value);
   }
 
   useEffect(() => {
     handleSelect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function onSubmit() {

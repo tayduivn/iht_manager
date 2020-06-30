@@ -6,24 +6,27 @@ import { useSelector } from "react-redux";
 const TableCustom = (data, columns) => {
   const searchs = useSelector((state) => state.searchReducer);
 
-  // if (keyword) {
-  //   data = _.filter(data, function (o) {
-  //     return _.toLower(o.CUST_NAME).indexOf(_.toLower(keyword)) !== -1;
-  //   });
-  // }
-
   if (searchs.kinds === "CUST_NAME") {
     data = _.filter(data, function (o) {
       return _.toLower(o.CUST_NAME).indexOf(_.toLower(searchs.keyword)) !== -1;
     });
-  } else {
+  } else if (searchs.kinds === "CUST_NO") {
     data = _.filter(data, function (o) {
       return _.toLower(o.CUST_NO).indexOf(_.toLower(searchs.keyword)) !== -1;
     });
+  } else if (searchs.kinds === "PNL_NO") {
+    data = _.filter(data, function (o) {
+      return _.toLower(o.PNL_NO).indexOf(_.toLower(searchs.keyword)) !== -1;
+    });
+  } else if (searchs.kinds === "PNL_NAME") {
+    data = _.filter(data, function (o) {
+      return _.toLower(o.PNL_NAME).indexOf(_.toLower(searchs.keyword)) !== -1;
+    });
   }
+
   return (
     <Table
-      rowKey={columns[0].key}
+      rowKey={columns[0].key.toString()}
       dataSource={data}
       columns={columns}
       pagination

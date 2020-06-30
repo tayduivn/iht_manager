@@ -1,6 +1,6 @@
 import React, { useEffect, Fragment } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { actFectCustomersRequeset, actOpenDrawer } from "../../actions/index";
+import { actFetchCustomersRequeset, actOpenDrawer } from "../../actions/index";
 import TableCustom from "../../components/Table";
 import { Space, Button } from "antd";
 import "./InformationCompany.css";
@@ -8,9 +8,9 @@ import Search from "../../components/Search/index";
 import DrawerCustom from "../../components/Drawer";
 
 const InformationCustomer = () => {
-  const customers = useSelector((state) => state.getData);
+  const customers = useSelector((state) => state.customers);
   const dispatch = useDispatch();
-  const fetchCustomers = () => dispatch(actFectCustomersRequeset());
+  const fetchCustomers = () => dispatch(actFetchCustomersRequeset());
   const openDrawer = () => dispatch(actOpenDrawer());
 
   useEffect(() => {
@@ -44,7 +44,7 @@ const InformationCustomer = () => {
             type="primary"
             onClick={(e) => {
               openDrawer();
-              // console.log(record.CUST_NO);
+              console.log(record.CUST_NO);
             }}
           >
             Xem
@@ -76,7 +76,9 @@ const InformationCustomer = () => {
   return (
     <Fragment>
       {Search(searchs)}
+      {/* {TableCustom(customers, columns )} */}
       {TableCustom(customers, columns)}
+    
       {DrawerCustom()}
     </Fragment>
   );

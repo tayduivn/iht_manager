@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import "./home.css";
 import "animate.css";
-import logo from "../../assets/logo IHT.png";
+import logo from "../../assets/logoIHT1.png";
 import background from "../../assets/background.jpg";
 import { useHistory } from "react-router-dom";
 

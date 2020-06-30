@@ -79,7 +79,7 @@ const DrawerCustom = () => {
           <DescriptionItem title="Department" content="XTech" />
         </Col>
         <Col span={12}>
-          <DescriptionItem title="Supervisor" content={<a>Lin</a>} />
+          <DescriptionItem title="Supervisor" content={<a href=' '>Lin</a>} />
         </Col>
       </Row>
       <Row>
