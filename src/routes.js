@@ -74,10 +74,6 @@ const routes = [
         path: "/dasboard/quanlythuchi",
         component: ManageFilePage,
       },
-      {
-        path: "",
-        component: NotFoundPage,
-      },
     ],
   },
   {

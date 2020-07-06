@@ -19,7 +19,6 @@ const Search = (searchs) => {
       [name]: value,
     });
   }
-
   function handleSelect(value) {
     if (value === undefined) {
       return setKinds(searchs[0].selects[0].value);

@@ -13,8 +13,7 @@ const InformationStaff = () => {
     fetchStaff();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-
+  
   const columns = [
     {
       title: "Mã Nhân Viên",
@@ -38,8 +37,8 @@ const InformationStaff = () => {
     },
     {
       title: "Chi Nhánh",
-      dataIndex: "BRANCH_ID",
-      key: "BRANCH_ID",
+      dataIndex: "BRANCH_NAME",
+      key: "BRANCH_NAME",
     },
   ];
 

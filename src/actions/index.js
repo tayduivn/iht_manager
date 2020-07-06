@@ -11,8 +11,10 @@ const {
   FETCH_AGENTS,
   FETCH_GARAGES,
   FETCH_BRANDS,
+  DETAIL_CUSTOMER,
 } = require("./actionTypes");
 
+//Cusomter
 export const actFetchCustomers = (customers) => {
   return {
     type: FETCH_CUSTOMERS,
@@ -28,6 +30,24 @@ export const actFetchCustomersRequeset = () => {
   };
 };
 
+export const actGetCustomer = (itemCustomer) => {
+  return {
+    type: DETAIL_CUSTOMER,
+    itemCustomer,
+  };
+};
+
+export const actGetCustomerRequeset = (CUST_NO) => {
+  return (dispatch) => {
+    return api(`data-basic/customer/des/${CUST_NO}`, "GET", null).then(
+      (res) => {
+        dispatch(actGetCustomer(res.data.data));
+      }
+    );
+  };
+};
+
+//staffs
 export const actFetchStaffs = (staffs) => {
   return {
     type: FETCH_STAFFS,
@@ -42,6 +62,8 @@ export const actFetchStaffsRequest = () => {
     });
   };
 };
+
+//costs
 
 export const actFetchCosts = (costs) => {
   return {
@@ -58,6 +80,7 @@ export const actFetchCostsRequest = () => {
   };
 };
 
+//Carriers
 export const actFetchCarriers = (carriers) => {
   return {
     type: FETCH_CARRIERS,
@@ -73,6 +96,7 @@ export const actFetchCarriersRequest = () => {
   };
 };
 
+//agents
 export const actFetchAgents = (agents) => {
   return {
     type: FETCH_AGENTS,
@@ -88,6 +112,7 @@ export const actFetchAgentsRequest = () => {
   };
 };
 
+//Garages
 export const actFetchGarages = (garages) => {
   return {
     type: FETCH_GARAGES,
@@ -103,6 +128,7 @@ export const actFetchGaragesRequest = () => {
   };
 };
 
+//Brands
 export const actFetchBrands = (brands) => {
   return {
     type: FETCH_BRANDS,

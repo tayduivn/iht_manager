@@ -1,4 +1,6 @@
 export const FETCH_CUSTOMERS = "FETCH_CUSTOMERS";
+export const DETAIL_CUSTOMER = 'DETAIL_CUSTOMER'
+
 export const FETCH_STAFFS = "FETCH_STAFFS";
 export const FECTH_COSTS = "FECTH_COSTS";
 export const FETCH_CARRIERS = "FETCH_CARRIERS";
