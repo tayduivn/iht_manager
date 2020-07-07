@@ -4,6 +4,7 @@ import { convertDateTime } from "../../utils/help";
 
 const { TextArea } = Input;
 const CustomizedForm = ({ fields, onFinish, item }) => {
+
   const Description = ({ title, content }) => (
     <div className="site-description-item-profile-wrapper">
       <p
@@ -59,7 +60,7 @@ const CustomizedForm = ({ fields, onFinish, item }) => {
       </Row>
       <Form.Item style={{ textAlign: "center" }}>
         <Button type="primary" htmlType="submit">
-          Sửa
+          Lưu
         </Button>
 
         <Button type="primary" style={{ marginLeft: 10 }} danger>

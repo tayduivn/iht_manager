@@ -1,7 +1,7 @@
 import React, { Fragment, useState, useEffect } from "react";
 import { Form, Row, Col, Select, Input, Button } from "antd";
 import { useDispatch } from "react-redux";
-import { actSearch } from "../../actions";
+import { actSearch, actOpenDrawer, actEmptyDetail } from "../../actions";
 
 const Search = (searchs) => {
   const [state, setState] = useState("");
@@ -9,6 +9,8 @@ const Search = (searchs) => {
 
   const dispatch = useDispatch();
   const handleKeyword = (searchs) => dispatch(actSearch(searchs));
+  const openDrawer = () => dispatch(actOpenDrawer());
+  const emptyDetail = () => dispatch(actEmptyDetail());
 
   function handleChange(e) {
     var target = e.target;
@@ -72,7 +74,17 @@ const Search = (searchs) => {
     <Form>
       <Row gutter={16} style={{ padding: 10 }}>
         {showSearchContent(searchs)}
-        <Col className="gutter-row" span={4}></Col>
+        <Col className="gutter-row" span={4}>
+          <Button
+            type="primary"
+            onClick={() => {
+              openDrawer();
+              emptyDetail();
+            }}
+          >
+            Tạo
+          </Button>
+        </Col>
         <Col className="gutter-row" span={4}>
           <Button type="primary" htmlType="submit" onClick={onSubmit}>
             Tìm (Search)

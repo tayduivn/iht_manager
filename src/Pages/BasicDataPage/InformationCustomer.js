@@ -10,6 +10,7 @@ import { Space, Button } from "antd";
 import "./InformationCompany.css";
 import Search from "../../components/Search/index";
 import DrawerCustom from "../../components/Drawer";
+import api from "../../utils/api";
 
 const InformationCustomer = () => {
   const customers = useSelector((state) => state.customers);
@@ -82,9 +83,19 @@ const InformationCustomer = () => {
 
   const fields = [
     {
+      name: "CUST_NO",
+      value: itemCustomer.CUST_NO,
+      label: "Mã Khách Hàng",
+    },
+    {
       name: "CUST_NAME",
       value: itemCustomer.CUST_NAME,
       label: "Tên Khách Hàng",
+    },
+    {
+      name: "CUST_CNAME",
+      value: itemCustomer.CUST_CNAME,
+      label: "Tên Khách Hàng 2",
     },
     { name: "TEN_DON_VI", value: itemCustomer.TEN_DON_VI, label: "Tên Đơn Vị" },
     {
@@ -101,13 +112,34 @@ const InformationCustomer = () => {
     { name: "CUST_TEL2", value: itemCustomer.CUST_TEL2, label: "Điện Thoại 2" },
     { name: "CUST_FAX", value: itemCustomer.CUST_FAX, label: "Số Fax" },
     { name: "CUST_TAX", value: itemCustomer.CUST_TAX, label: "Mã Số Thuế" },
+    { name: "CUST_BOSS", value: itemCustomer.CUST_TAX, label: "Người Liên Hệ" },
   ];
+
+  const onFinish = (values) => {
+    const form = new FormData();
+console.log(values)
+    form.append("CUST_NO", values.CUST_NO);
+    form.append("CUST_NAME", values.CUST_NAME);
+    form.append("CUST_CNAME", values.CUST_CNAME);
+    form.append("CUST_ADDRESS", values.CUST_ADDRESS);
+    form.append("CUST_TEL1", values.CUST_TEL1);
+    form.append("CUST_TEL2", values.CUST_TEL2);
+    form.append("CUST_FAX", values.CUST_FAX);
+    form.append("CUST_TAX", values.CUST_TAX);
+    form.append("CUST_BOSS", values.CUST_BOSS);
+    form.append("TEN_DON_VI", values.TEN_DON_VI);
+    form.append("BRANCH_ID", localStorage.getItem("BRANCH_ID"));
+    form.append("INPUT_USER", localStorage.getItem("USER_NO"));
+    api("data-basic/customer/add", "POST", form).then((res) =>
+      console.log(res)
+    );
+  };
 
   return (
     <Fragment>
       {Search(searchs)}
       {TableCustom(customers, columns)}
-      {DrawerCustom(fields, itemCustomer)}
+      {DrawerCustom(fields, itemCustomer, onFinish)}
     </Fragment>
   );
 };

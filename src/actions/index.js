@@ -12,7 +12,27 @@ const {
   FETCH_GARAGES,
   FETCH_BRANDS,
   DETAIL_CUSTOMER,
+  LOGIN,
+  DETAIL_STAFF,
+  EMPTY_DETAIL,
+  ADD_CUSTOMERS,
 } = require("./actionTypes");
+
+//Login
+export const actLogin = (users) => {
+  return {
+    type: LOGIN,
+    users,
+  };
+};
+
+export const actLoginRequest = (body) => {
+  return (dispatch) => {
+    return api("user/login", "POST", body).then((res) => {
+      dispatch(actLogin(res.data.data));
+    });
+  };
+};
 
 //Cusomter
 export const actFetchCustomers = (customers) => {
@@ -47,6 +67,21 @@ export const actGetCustomerRequeset = (CUST_NO) => {
   };
 };
 
+export const actAddCustomer = (customer) => {
+  return {
+    type: ADD_CUSTOMERS,
+    customer,
+  };
+};
+
+export const actAddCustomerRequest = (customer) => {
+  return (dispatch) => {
+    return api("data-basic/customer/add", "POST", customer).then((res) => {
+      dispatch(actAddCustomer(res.data.data));
+    });
+  };
+};
+
 //staffs
 export const actFetchStaffs = (staffs) => {
   return {
@@ -60,6 +95,23 @@ export const actFetchStaffsRequest = () => {
     return api("data-basic/staff-customs", "GET", null).then((res) => {
       dispatch(actFetchStaffs(res.data.data));
     });
+  };
+};
+
+export const actGetStaff = (itemCustomer) => {
+  return {
+    type: DETAIL_STAFF,
+    itemCustomer,
+  };
+};
+
+export const actGetStaffRequeset = (PNL_NO) => {
+  return (dispatch) => {
+    return api(`data-basic/staff-customs/des/${PNL_NO}`, "GET", null).then(
+      (res) => {
+        dispatch(actGetStaff(res.data.data));
+      }
+    );
   };
 };
 
@@ -160,5 +212,11 @@ export const actOpenDrawer = () => {
 export const actCloseDrawer = () => {
   return {
     type: CLOSE_DRAWER,
+  };
+};
+
+export const actEmptyDetail = () => {
+  return {
+    type: EMPTY_DETAIL,
   };
 };

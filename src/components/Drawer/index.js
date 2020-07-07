@@ -5,14 +5,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { actCloseDrawer } from "../../actions";
 import CustomizedForm from "./CustomizedForm";
 
-const DrawerCustom = (fields, item) => {
+const DrawerCustom = (fields, item, onFinish) => {
   const visible = useSelector((state) => state.isDrawer);
   const distpatch = useDispatch();
   const closeDrawer = () => distpatch(actCloseDrawer());
-
-  const onFinish = (values) => {
-    console.log("Received values of form: ", values);
-  };
 
   return (
     <Drawer
