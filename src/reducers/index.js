@@ -9,7 +9,6 @@ import agents from "./agents";
 import garages from "./garages";
 import brands from "./brands";
 import itemCustomer from './itemCustomer'
-import login from './login'
 
 const allReducer = combineReducers({
   customers,
@@ -21,8 +20,7 @@ const allReducer = combineReducers({
   agents,
   garages,
   brands,
-  itemCustomer,
-  login
+  itemCustomer
 });
 
 export default allReducer;

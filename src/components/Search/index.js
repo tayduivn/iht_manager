@@ -75,6 +75,11 @@ const Search = (searchs) => {
       <Row gutter={16} style={{ padding: 10 }}>
         {showSearchContent(searchs)}
         <Col className="gutter-row" span={4}>
+          <Button type="primary" htmlType="submit" onClick={onSubmit}>
+            Tìm (Search)
+          </Button>
+        </Col>
+        <Col className="gutter-row" span={4}>
           <Button
             type="primary"
             onClick={() => {
@@ -83,11 +88,6 @@ const Search = (searchs) => {
             }}
           >
             Tạo
-          </Button>
-        </Col>
-        <Col className="gutter-row" span={4}>
-          <Button type="primary" htmlType="submit" onClick={onSubmit}>
-            Tìm (Search)
           </Button>
         </Col>
       </Row>

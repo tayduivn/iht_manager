@@ -1,11 +1,17 @@
 import React, { Fragment, useEffect } from "react";
 import TableCustom from "../../components/Table";
 import { useSelector, useDispatch } from "react-redux";
-import { actFetchStaffsRequest, actOpenDrawer, actGetStaffRequeset } from "../../actions";
+import {
+  actFetchStaffsRequest,
+  actOpenDrawer,
+  actGetStaffRequeset,
+  actCloseDrawer,
+  actAddStaffRequest,
+  actEditStafffRequest,
+} from "../../actions";
 import Search from "../../components/Search";
 import { Space, Button } from "antd";
 import DrawerCustom from "../../components/Drawer";
-
 
 const InformationStaff = () => {
   const staffs = useSelector((state) => state.staffs);
@@ -14,17 +20,20 @@ const InformationStaff = () => {
   const fetchStaff = () => dispatch(actFetchStaffsRequest());
   const openDrawer = () => dispatch(actOpenDrawer());
   const getStaff = (PNL_NO) => dispatch(actGetStaffRequeset(PNL_NO));
+  const closeDrawer = () => dispatch(actCloseDrawer());
+  const addStaff = (staff) => dispatch(actAddStaffRequest(staff));
+  const editStaff = (staff) => dispatch(actEditStafffRequest(staff));
 
   useEffect(() => {
     fetchStaff();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  
+
   const columns = [
     {
       title: "Mã Nhân Viên",
       dataIndex: "PNL_NO",
-      key: 'PNL_NO',
+      key: "PNL_NO",
     },
     {
       title: "Tên Nhân Viên",
@@ -48,7 +57,7 @@ const InformationStaff = () => {
     },
     {
       title: "",
-      key: "CUST_NO",
+      key: "PNL_NO",
       render: (text, record) => (
         <>
           <Space size="middle">
@@ -56,7 +65,7 @@ const InformationStaff = () => {
               type="primary"
               onClick={(e) => {
                 openDrawer();
-                 getStaff(record.PNL_NO);
+                getStaff(record.PNL_NO);
               }}
             >
               Xem
@@ -88,6 +97,11 @@ const InformationStaff = () => {
 
   const fields = [
     {
+      name: "PNL_NO",
+      value: itemCustomer.PNL_NO,
+      label: "Mã Nhân Viên",
+    },
+    {
       name: "BRANCH_NAME",
       value: itemCustomer.BRANCH_NAME,
       label: "Chi Nhánh",
@@ -115,12 +129,32 @@ const InformationStaff = () => {
     },
   ];
 
+  const onFinish = (values) => {
+    console.log(values);
+    const form = new FormData();
+    form.append("PNL_NO", values.PNL_NO);
+    form.append("PNL_NAME", values.PNL_NAME);
+    form.append("PNL_NAME_C", values.PNL_NAME_C);
+    form.append("PNL_ADDRESS", values.PNL_ADDRESS);
+    form.append("PNL_ID", values.PNL_ID);
+    form.append("PNL_TEL", values.PNL_TEL);
+    form.append("BRANCH_ID", localStorage.getItem("BRANCH_ID"));
+    if (itemCustomer.INPUT_USER) {
+      form.append("MODIFY_USER", localStorage.getItem("USER_NO"));
+      editStaff(form);
+      closeDrawer();
+    } else {
+      form.append("INPUT_USER", localStorage.getItem("USER_NO"));
+      addStaff(form);
+      closeDrawer();
+    }
+  };
 
   return (
     <Fragment>
       {Search(searchs)}
       {TableCustom(staffs, columns)}
-      {DrawerCustom(fields, itemCustomer)}
+      {DrawerCustom(fields, itemCustomer, onFinish)}
     </Fragment>
   );
 };

@@ -12,27 +12,16 @@ const {
   FETCH_GARAGES,
   FETCH_BRANDS,
   DETAIL_CUSTOMER,
-  LOGIN,
   DETAIL_STAFF,
   EMPTY_DETAIL,
   ADD_CUSTOMERS,
+  EDIT_CUSTOMER,
+  ADD_STAFF,
+  EDIT_STAFF,
+  DETAIL_CARRIER,
+  ADD_CARRIER,
+  EDIT_CARRIER
 } = require("./actionTypes");
-
-//Login
-export const actLogin = (users) => {
-  return {
-    type: LOGIN,
-    users,
-  };
-};
-
-export const actLoginRequest = (body) => {
-  return (dispatch) => {
-    return api("user/login", "POST", body).then((res) => {
-      dispatch(actLogin(res.data.data));
-    });
-  };
-};
 
 //Cusomter
 export const actFetchCustomers = (customers) => {
@@ -44,7 +33,7 @@ export const actFetchCustomers = (customers) => {
 
 export const actFetchCustomersRequeset = () => {
   return (dispatch) => {
-    return api("data-basic/customer", "GET", null).then((res) => {
+    return api("data-basic/customer/type=1", "GET", null).then((res) => {
       dispatch(actFetchCustomers(res.data.data));
     });
   };
@@ -59,11 +48,13 @@ export const actGetCustomer = (itemCustomer) => {
 
 export const actGetCustomerRequeset = (CUST_NO) => {
   return (dispatch) => {
-    return api(`data-basic/customer/des/${CUST_NO}`, "GET", null).then(
-      (res) => {
-        dispatch(actGetCustomer(res.data.data));
-      }
-    );
+    return api(
+      `data-basic/customer/des/id=${CUST_NO}/type=1`,
+      "GET",
+      null
+    ).then((res) => {
+      dispatch(actGetCustomer(res.data.data));
+    });
   };
 };
 
@@ -76,8 +67,23 @@ export const actAddCustomer = (customer) => {
 
 export const actAddCustomerRequest = (customer) => {
   return (dispatch) => {
-    return api("data-basic/customer/add", "POST", customer).then((res) => {
+    return api("data-basic/customer/add/", "POST", customer).then((res) => {
       dispatch(actAddCustomer(res.data.data));
+    });
+  };
+};
+
+export const actEditCustomer = (customer) => {
+  return {
+    type: EDIT_CUSTOMER,
+    customer,
+  };
+};
+
+export const actEditCustomerRequest = (customer) => {
+  return (dispatch) => {
+    return api("data-basic/customer/edit", "POST", customer).then((res) => {
+      dispatch(actEditCustomer(res.data.data));
     });
   };
 };
@@ -115,6 +121,36 @@ export const actGetStaffRequeset = (PNL_NO) => {
   };
 };
 
+export const actAddStaff = (staff) => {
+  return {
+    type: ADD_STAFF,
+    staff,
+  };
+};
+
+export const actAddStaffRequest = (staff) => {
+  return (dispatch) => {
+    return api("data-basic/staff-customs/add", "POST", staff).then((res) => {
+      dispatch(actAddStaff(res.data.data));
+    });
+  };
+};
+
+export const actEditStaff = (staff) => {
+  return {
+    type: EDIT_STAFF,
+    staff,
+  };
+};
+
+export const actEditStafffRequest = (staff) => {
+  return (dispatch) => {
+    return api("data-basic/staff-customs/edit", "POST", staff).then((res) => {
+      dispatch(actEditStaff(res.data.data));
+    });
+  };
+};
+
 //costs
 
 export const actFetchCosts = (costs) => {
@@ -142,11 +178,61 @@ export const actFetchCarriers = (carriers) => {
 
 export const actFetchCarriersRequest = () => {
   return (dispatch) => {
-    return api("data-basic/carriers", "GET", null).then((res) => {
+    return api("data-basic/customer/type=2", "GET", null).then((res) => {
       dispatch(actFetchCarriers(res.data.data));
     });
   };
 };
+
+export const actGetCarrier = (itemCustomer) => {
+  return {
+    type: DETAIL_CARRIER,
+    itemCustomer,
+  };
+};
+
+export const actGetCarrierRequeset = (CUST_NO) => {
+  return (dispatch) => {
+    return api(
+      `data-basic/customer/des/id=${CUST_NO}/type=2`,
+      "GET",
+      null
+    ).then((res) => {
+      dispatch(actGetCarrier(res.data.data));
+    });
+  };
+};
+
+export const actAddCarrier = (carrier) => {
+  return {
+    type: ADD_CARRIER,
+    carrier,
+  };
+};
+
+export const actAddCarrierRequest = (carrier) => {
+  return (dispatch) => {
+    return api("data-basic/customer/add", "POST", carrier).then((res) => {
+      dispatch(actAddCarrier(res.data.data));
+    });
+  };
+};
+
+export const actEditCarrier = (carrier) => {
+  return {
+    type: EDIT_CARRIER,
+    carrier,
+  };
+};
+
+export const actEditCarrierRequest = (carrier) => {
+  return (dispatch) => {
+    return api("data-basic/customer/edit", "POST", carrier).then((res) => {
+      dispatch(actEditCarrier(res.data.data));
+    });
+  };
+};
+
 
 //agents
 export const actFetchAgents = (agents) => {
@@ -158,7 +244,7 @@ export const actFetchAgents = (agents) => {
 
 export const actFetchAgentsRequest = () => {
   return (dispatch) => {
-    return api("data-basic/agent", "GET", null).then((res) => {
+    return api("data-basic/customer/type=4", "GET", null).then((res) => {
       dispatch(actFetchAgents(res.data.data));
     });
   };

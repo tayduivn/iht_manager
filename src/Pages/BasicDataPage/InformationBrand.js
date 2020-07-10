@@ -1,15 +1,12 @@
 import React, { Fragment, useEffect } from "react";
 import TableCustom from "../../components/Table";
 import { useSelector, useDispatch } from "react-redux";
-import { actFetchBrandsRequest, actOpenDrawer } from "../../actions";
-import { Space, Button } from "antd";
-import DrawerCustom from "../../components/Drawer";
+import { actFetchBrandsRequest } from "../../actions";
 
 const InformationBrand = () => {
   const brands = useSelector((state) => state.brands);
   const dispatch = useDispatch();
   const fetchBrands = () => dispatch(actFetchBrandsRequest());
-  const openDrawer = () => dispatch(actOpenDrawer());
 
   useEffect(() => {
     fetchBrands();
@@ -31,32 +28,12 @@ const InformationBrand = () => {
       title: "BRANCH ADD",
       dataIndex: "BRANCH_ADD",
       key: "BRANCH_ADD",
-    },
-     {
-      title: "",
-      key: "CUST_NO",
-      render: (text, record) => (
-        <>
-          <Space size="middle">
-            <Button
-              type="primary"
-              onClick={(e) => {
-                openDrawer();
-                // getCustomer(record.CUST_NO);
-              }}
-            >
-              Xem
-            </Button>
-          </Space>
-        </>
-      ),
-    },
+    }
   ];
 
   return (
     <Fragment>
       {TableCustom(brands, columns)}
-      {DrawerCustom()}
     </Fragment>
   );
 };

@@ -4,13 +4,15 @@ import {
   actFetchCustomersRequeset,
   actOpenDrawer,
   actGetCustomerRequeset,
+  actAddCustomerRequest,
+  actEditCustomerRequest,
+  actCloseDrawer,
 } from "../../actions/index";
 import TableCustom from "../../components/Table";
 import { Space, Button } from "antd";
 import "./InformationCompany.css";
 import Search from "../../components/Search/index";
 import DrawerCustom from "../../components/Drawer";
-import api from "../../utils/api";
 
 const InformationCustomer = () => {
   const customers = useSelector((state) => state.customers);
@@ -19,6 +21,9 @@ const InformationCustomer = () => {
   const fetchCustomers = () => dispatch(actFetchCustomersRequeset());
   const getCustomer = (CUST_NO) => dispatch(actGetCustomerRequeset(CUST_NO));
   const openDrawer = () => dispatch(actOpenDrawer());
+  const addCustomer = (customer) => dispatch(actAddCustomerRequest(customer));
+  const editCustomer = (customer) => dispatch(actEditCustomerRequest(customer));
+  const closeDrawer = () => dispatch(actCloseDrawer());
 
   useEffect(() => {
     fetchCustomers();
@@ -117,7 +122,7 @@ const InformationCustomer = () => {
 
   const onFinish = (values) => {
     const form = new FormData();
-console.log(values)
+    form.append("CUST_TYPE", 1);
     form.append("CUST_NO", values.CUST_NO);
     form.append("CUST_NAME", values.CUST_NAME);
     form.append("CUST_CNAME", values.CUST_CNAME);
@@ -129,10 +134,15 @@ console.log(values)
     form.append("CUST_BOSS", values.CUST_BOSS);
     form.append("TEN_DON_VI", values.TEN_DON_VI);
     form.append("BRANCH_ID", localStorage.getItem("BRANCH_ID"));
-    form.append("INPUT_USER", localStorage.getItem("USER_NO"));
-    api("data-basic/customer/add", "POST", form).then((res) =>
-      console.log(res)
-    );
+    if (itemCustomer.INPUT_USER) {
+      form.append("MODIFY_USER", localStorage.getItem("USER_NO"));
+      editCustomer(form);
+      closeDrawer();
+    } else {
+      form.append("INPUT_USER", localStorage.getItem("USER_NO"));
+      addCustomer(form);
+      closeDrawer();
+    }
   };
 
   return (
