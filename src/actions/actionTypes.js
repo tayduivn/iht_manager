@@ -20,7 +20,18 @@ export const FETCH_GARAGES = "FETCH_GARAGES";
 export const FETCH_BRANDS = "FETCH_BRANDS";
 
 export const SEARCH = "SEARCH";
+export const SEARCH_ALL = 'SEARCH_ALL'
 
 export const OPEN_DRAWER = "OPEN_DRAWER";
 export const CLOSE_DRAWER = "CLOSE_DRAWER";
 export const EMPTY_DETAIL = "EMPTY_DETAIL";
+
+export const FETCH_PAYMENTS = "FETCH_PAYMENTS";
+export const DETAIL_PAYMENT = "DETAIL_PAYMENT";
+export const ADD_PAYMENT = "ADD_PAYMENT";
+export const EDIT_PAYMENT = "EDIT_PAYMENT";
+
+export const FETCH_JOBS ='FETCH_JOBS'
+export const DETAIL_JOB ='DETAIL_JOB'
+export const ADD_JOB = 'ADD_JOB'
+export const EDIT_JOB ='EDIT_JOB'

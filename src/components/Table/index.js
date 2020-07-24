@@ -1,7 +1,8 @@
 import React from "react";
 import { Table } from "antd";
 import _ from "lodash";
-import { useSelector } from "react-redux";
+import { useSelector} from "react-redux";
+
 
 const TableCustom = (data, columns) => {
   const searchs = useSelector((state) => state.searchReducer);
@@ -22,7 +23,12 @@ const TableCustom = (data, columns) => {
     data = _.filter(data, function (o) {
       return _.toLower(o.PNL_NAME).indexOf(_.toLower(searchs.keyword)) !== -1;
     });
-  }
+  } else if (searchs.kinds === "JOB_NO") {
+    data = _.filter(data, function (o) {
+      return _.toLower(o.JOB_NO).indexOf(_.toLower(searchs.keyword)) !== -1;
+    });
+  } 
+  
 
   return (
     <Table

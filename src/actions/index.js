@@ -20,7 +20,14 @@ const {
   EDIT_STAFF,
   DETAIL_CARRIER,
   ADD_CARRIER,
-  EDIT_CARRIER
+  EDIT_CARRIER,
+  FETCH_PAYMENTS,
+  DETAIL_PAYMENT,
+  FETCH_JOBS,
+  DETAIL_JOB,
+  ADD_JOB,
+  SEARCH_ALL,
+  EDIT_JOB,
 } = require("./actionTypes");
 
 //Cusomter
@@ -233,7 +240,6 @@ export const actEditCarrierRequest = (carrier) => {
   };
 };
 
-
 //agents
 export const actFetchAgents = (agents) => {
   return {
@@ -289,6 +295,26 @@ export const actSearch = (searchs) => {
   };
 };
 
+export const actSearchAll = (searchs) => {
+  return {
+    type: SEARCH_ALL,
+    searchs,
+  };
+};
+
+export const actSearchAllRequest = (type, keyword) => {
+  return (dispatch) => {
+    return api(
+      `file/job-start/search/type=${type}&value=${keyword}`,
+      "GET",
+      null
+    ).then((res) => {
+      console.log(res);
+      dispatch(actSearchAll(res.data.data));
+    });
+  };
+};
+
 export const actOpenDrawer = () => {
   return {
     type: OPEN_DRAWER,
@@ -304,5 +330,96 @@ export const actCloseDrawer = () => {
 export const actEmptyDetail = () => {
   return {
     type: EMPTY_DETAIL,
+  };
+};
+
+export const actFetchPayments = (payments) => {
+  return {
+    type: FETCH_PAYMENTS,
+    payments,
+  };
+};
+
+export const actFetchPaymentsRequeset = () => {
+  return (dispatch) => {
+    return api("payment/advance-slip", "GET", null).then((res) => {
+      dispatch(actFetchPayments(res.data.data));
+    });
+  };
+};
+
+export const actGetPayment = (itemPayment) => {
+  return {
+    type: DETAIL_PAYMENT,
+    itemPayment,
+  };
+};
+
+export const actGetPaymentRequeset = (LENDER_NO) => {
+  return (dispatch) => {
+    return api(`payment/advance-slip/des/${LENDER_NO}`, "GET", null).then(
+      (res) => {
+        dispatch(actGetPayment(res.data.data));
+      }
+    );
+  };
+};
+
+//Job
+export const actFetchJobs = (jobs) => {
+  return { type: FETCH_JOBS, jobs };
+};
+
+export const actFetchJobsRequest = () => {
+  return (dispatch) => {
+    return api("file/job-start", "GET", null).then((res) => {
+      dispatch(actFetchJobs(res.data.data));
+    });
+  };
+};
+
+export const actGetJob = (itemJob) => {
+  return {
+    type: DETAIL_JOB,
+    itemJob,
+  };
+};
+
+export const actGetJobRequest = (JOB_NO) => {
+  return (dispatch) => {
+    return api(`file/job-start/des/${JOB_NO}`, "GET", null).then((res) => {
+      dispatch(actGetJob(res.data.data));
+    });
+  };
+};
+
+export const actAddJob = (job) => {
+  return {
+    type: ADD_JOB,
+    job,
+  };
+};
+
+export const actAddJobRequest = (job) => {
+  return (dispatch) => {
+    return api("file/job-start/add", "POST", job).then((res) => {
+      dispatch(actAddJob(res.data.data));
+    });
+  };
+};
+
+export const actEditJob = (job) => {
+  return {
+    type: EDIT_JOB,
+    job,
+  };
+};
+
+export const actEditJobRequest = (job) => {
+  return (dispatch) => {
+    return api("file/job-start/edit", "POST", job).then((res) => {
+      console.log(res)
+      // dispatch(actEditJob(res.data.data));
+    });
   };
 };

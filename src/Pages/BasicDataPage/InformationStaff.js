@@ -100,6 +100,7 @@ const InformationStaff = () => {
       name: "PNL_NO",
       value: itemCustomer.PNL_NO,
       label: "Mã Nhân Viên",
+      disabled: true,
     },
     {
       name: "BRANCH_NAME",
@@ -132,7 +133,6 @@ const InformationStaff = () => {
   const onFinish = (values) => {
     console.log(values);
     const form = new FormData();
-    form.append("PNL_NO", values.PNL_NO);
     form.append("PNL_NAME", values.PNL_NAME);
     form.append("PNL_NAME_C", values.PNL_NAME_C);
     form.append("PNL_ADDRESS", values.PNL_ADDRESS);
@@ -141,6 +141,7 @@ const InformationStaff = () => {
     form.append("BRANCH_ID", localStorage.getItem("BRANCH_ID"));
     if (itemCustomer.INPUT_USER) {
       form.append("MODIFY_USER", localStorage.getItem("USER_NO"));
+      form.append("PNL_NO", values.PNL_NO);
       editStaff(form);
       closeDrawer();
     } else {

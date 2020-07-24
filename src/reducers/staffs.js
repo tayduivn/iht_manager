@@ -24,7 +24,7 @@ const staffs = (state = initialState, action) => {
       return [...state];
     case ADD_STAFF:
       console.log(action)
-      state.push(action.staff);
+      state.unshift(action.staff);
       return [...state];
     case EDIT_STAFF:
       index = findIndex(state, action.staff.PNL_NO);

@@ -11,6 +11,10 @@ import ListCost from "./Pages/BasicDataPage/ListCost";
 import ListCarriers from "./Pages/BasicDataPage/ListCarriers";
 import ListAgents from "./Pages/BasicDataPage/ListAgent";
 import InformationBrand from "./Pages/BasicDataPage/InformationBrand";
+import ReceiptsExpensesPage from "./Pages/ReceiptsExpensesPage";
+import Payment from "./Pages/ReceiptsExpensesPage/Payment";
+import CreateFollow from "./Pages/ManageFilePage/CreateFollow";
+import CreateJobOrder from "./Pages/ManageFilePage/CreateJobOrder";
 
 const routes = [
   {
@@ -65,14 +69,33 @@ const routes = [
         ],
       },
       {
-        name: "Quản Lý Hồ Sơ",
+        name: "Quản Lý Thu Chi",
         path: "/dasboard/quanlyhoso",
-        component: ManageFilePage,
+        component: ReceiptsExpensesPage,
+        routes: [
+          {
+            name: "Phiếu Chi Tạm Ứng",
+            path: "/dasboard/quanlyhoso/phieuchitamung",
+            component: Payment,
+          },
+        ],
       },
       {
-        name: "Quản Lý Thu Chi",
+        name: "Quản Lý Hồ Sơ",
         path: "/dasboard/quanlythuchi",
         component: ManageFilePage,
+        routes: [
+          {
+            name: "Tạo Phiếu Theo Dõi",
+            path: "/dasboard/quanlythuchi/taophieutheodoi",
+            component: CreateFollow,
+          },
+          {
+            name: "Tạo Job Order",
+            path: "/dasboard/quanlythuchi/taojoborder",
+            component: CreateJobOrder,
+          },
+        ],
       },
     ],
   },

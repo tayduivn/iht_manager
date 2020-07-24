@@ -23,7 +23,7 @@ const customers = (state = initialState, action) => {
       state = action.customers;
       return [...state];
     case ADD_CUSTOMERS:
-      state.push(action.customer);
+      state.unshift(action.customer);
       return [...state];
     case EDIT_CUSTOMER:
       // state = action.customer;

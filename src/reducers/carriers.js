@@ -23,7 +23,7 @@ const carriers = (state = initialState, action) => {
       state = action.carriers;
       return [...state];
     case ADD_CARRIER:
-      state.push(action.carrier);
+      state.unshift(action.carrier);
       return [...state];
     case EDIT_CARRIER:
       index = findIndex(state, action.carrier.CUST_NO);

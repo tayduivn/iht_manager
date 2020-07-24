@@ -6,13 +6,12 @@ import { RouterWithSubRoutes } from "../../utils/RouterWithSubRoutes";
 
 const { Content } = Layout;
 
-const ManagerFilePage = ({ routes }) => {
+const ReceiptsExpensesPage = ({ routes }) => {
   return (
     <Fragment>
       {SiderCustom(routes)}
-      <Content
-        style={{ padding: "0 24px", minHeight: 280 }}
-        className="site-layout-background"
+      <Content style={{padding: '0 24px', minHeight: 280}}
+      className="site-layout-background"
       >
         <Switch>
           {routes.map((route, i) => {
@@ -24,4 +23,4 @@ const ManagerFilePage = ({ routes }) => {
   );
 };
 
-export default ManagerFilePage;
+export default ReceiptsExpensesPage;

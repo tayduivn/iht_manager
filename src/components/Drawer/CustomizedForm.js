@@ -1,9 +1,24 @@
-import React from 'react'
-import { Form, Input, Divider, Row, Col, Button } from "antd";
+import React, { useEffect } from "react";
+import { Form, Input, Divider, Row, Col, Button, Select } from "antd";
 import { convertDateTime } from "../../utils/help";
+import { useDispatch } from "react-redux";
+import {
+  actFetchStaffsRequest,
+  actFetchCustomersRequeset,
+} from "../../actions";
 
 const { TextArea } = Input;
+const { Option } = Select;
 const CustomizedForm = ({ fields, onFinish, item }) => {
+  const dispatch = useDispatch();
+  const fetchStaffs = () => dispatch(actFetchStaffsRequest());
+  const fetchCustomers = () => dispatch(actFetchCustomersRequeset());
+
+  useEffect(() => {
+    fetchStaffs();
+    fetchCustomers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const Description = ({ title, content }) => (
     <div className="site-description-item-profile-wrapper">
@@ -20,6 +35,34 @@ const CustomizedForm = ({ fields, onFinish, item }) => {
     labelCol: { span: 6 },
     wrapperCol: { span: 18 },
   };
+
+  const checkSelect = (field) => {
+    if (field.name === "PNL_NO" || field.name === "PNL_NO1") {
+      return field.dataSelect.map((item, index) => (
+        <Option key={item.PNL_NO}>{item.PNL_NO + " " + item.PNL_NAME}</Option>
+      ));
+    } else if (field.name === "DOR_NO") {
+      return (
+        <>
+          <Option value={"VND"}>VND</Option>
+          <Option value={"USD"}>USD</Option>
+        </>
+      );
+    } else if (field.name === "LENDER_NAME") {
+      return (
+        <>
+          <Option value={"C"}>Chi Trực Tiếp</Option>
+          <Option value={"T"}>Chi Tạm Ứng</Option>
+          <Option value={"U"}>Phiếu Tạm Ứng</Option>
+        </>
+      );
+    } else if (field.name === "CUST_NO") {
+      return field.dataSelect.map((item, index) => (
+        <Option key={index} value={item.CUST_NO}>{`${item.CUST_NO} | ${item.CUST_NAME}`}</Option>
+      ));
+    }
+  };
+
   return (
     <Form {...layout} fields={fields} onFinish={onFinish}>
       <p
@@ -31,7 +74,27 @@ const CustomizedForm = ({ fields, onFinish, item }) => {
       {fields.map((field, index) => {
         return (
           <Form.Item name={field.name} label={field.label} key={index}>
-            {field.area === true ? <TextArea /> : <Input />}
+            {field.area === true ? (
+              <TextArea />
+            ) : field.disabled === true ? (
+              <Input disabled />
+            ) : field.select ? (
+              <Select
+                showSearch
+                optionFilterProp="children"
+                
+                filterOption={(input, option) =>
+                  option.children.toLowerCase().indexOf(input.toLowerCase()) >=
+                  0
+                }
+              >
+                {checkSelect(field)}
+              </Select>
+            ) : field.date === true ? (
+              <Input type="date" />
+            ) : (
+              <Input />
+            )}
           </Form.Item>
         );
       })}
@@ -71,4 +134,4 @@ const CustomizedForm = ({ fields, onFinish, item }) => {
   );
 };
 
-export default CustomizedForm
+export default CustomizedForm;

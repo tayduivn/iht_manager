@@ -8,7 +8,9 @@ import carriers from "./carriers";
 import agents from "./agents";
 import garages from "./garages";
 import brands from "./brands";
-import itemCustomer from './itemCustomer'
+import itemCustomer from "./itemCustomer";
+import payments from "./payments";
+import jobs from "./jobs";
 
 const allReducer = combineReducers({
   customers,
@@ -20,7 +22,9 @@ const allReducer = combineReducers({
   agents,
   garages,
   brands,
-  itemCustomer
+  itemCustomer,
+  payments,
+  jobs
 });
 
 export default allReducer;

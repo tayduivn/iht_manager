@@ -91,6 +91,7 @@ const InformationCustomer = () => {
       name: "CUST_NO",
       value: itemCustomer.CUST_NO,
       label: "Mã Khách Hàng",
+      disabled: true,
     },
     {
       name: "CUST_NAME",
@@ -123,7 +124,6 @@ const InformationCustomer = () => {
   const onFinish = (values) => {
     const form = new FormData();
     form.append("CUST_TYPE", 1);
-    form.append("CUST_NO", values.CUST_NO);
     form.append("CUST_NAME", values.CUST_NAME);
     form.append("CUST_CNAME", values.CUST_CNAME);
     form.append("CUST_ADDRESS", values.CUST_ADDRESS);
@@ -136,6 +136,7 @@ const InformationCustomer = () => {
     form.append("BRANCH_ID", localStorage.getItem("BRANCH_ID"));
     if (itemCustomer.INPUT_USER) {
       form.append("MODIFY_USER", localStorage.getItem("USER_NO"));
+      form.append("CUST_NO", values.CUST_NO);
       editCustomer(form);
       closeDrawer();
     } else {
