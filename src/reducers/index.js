@@ -11,6 +11,8 @@ import brands from "./brands";
 import itemCustomer from "./itemCustomer";
 import payments from "./payments";
 import jobs from "./jobs";
+import jobsnco from "./jobsnco";
+import joborder from './joborder'
 
 const allReducer = combineReducers({
   customers,
@@ -24,7 +26,9 @@ const allReducer = combineReducers({
   brands,
   itemCustomer,
   payments,
-  jobs
+  jobs,
+  jobsnco,
+  joborder
 });
 
 export default allReducer;

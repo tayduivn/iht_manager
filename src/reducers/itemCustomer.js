@@ -5,6 +5,8 @@ import {
   DETAIL_CARRIER,
   DETAIL_PAYMENT,
   DETAIL_JOB,
+  DETAIL_JOB_NOT_CREATE_ORDER,
+  EMPTY_DETAIL_JOB,
 } from "../actions/actionTypes";
 
 var initialState = {};
@@ -26,9 +28,15 @@ const itemEditing = (state = initialState, action) => {
     case DETAIL_JOB:
       state = action.itemJob;
       return { ...state };
+    case DETAIL_JOB_NOT_CREATE_ORDER:
+      state = action.itemJob;
+      return { ...state };
     case EMPTY_DETAIL:
       state = {};
-      return { ...state };
+      return state;
+    case EMPTY_DETAIL_JOB:
+      state = {};
+      return state;
     default:
       return state;
   }

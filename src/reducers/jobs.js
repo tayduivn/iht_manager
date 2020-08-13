@@ -7,10 +7,10 @@ import {
 
 var initialState = [];
 
-const findIndex = (data, CUST_NO) => {
+const findIndex = (data, JOB_NO) => {
   var result = -1;
   data.forEach((customer, index) => {
-    if (customer.CUST_NO === CUST_NO) {
+    if (customer.JOB_NO === JOB_NO) {
       result = index;
     }
   });

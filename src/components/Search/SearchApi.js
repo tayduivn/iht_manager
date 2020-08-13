@@ -1,14 +1,16 @@
 import React from "react";
 import { Form, Row, Col, Input, Button, Select } from "antd";
 import { useDispatch } from "react-redux";
-import { actOpenDrawer, actEmptyDetail } from "../../actions";
+import { actOpenDrawer, actEmptyDetail, actOpenModal, actEmptyDetailJob } from "../../actions";
 
 const { Option } = Select;
 
-const SearchApi = (onSearch) => {
+const SearchApi = (onSearch, valueModal) => {
   const dispatch = useDispatch();
   const openDrawer = () => dispatch(actOpenDrawer());
   const emptyDetail = () => dispatch(actEmptyDetail());
+  const emptyDetailJob = () => dispatch(actEmptyDetailJob());
+  const openModal = () => dispatch(actOpenModal());
   return (
     <Form onFinish={onSearch}>
       <Row gutter={24} style={{ padding: 10 }}>
@@ -39,8 +41,14 @@ const SearchApi = (onSearch) => {
           <Button
             type="primary"
             onClick={() => {
-              openDrawer();
-              emptyDetail();
+              if (valueModal === true || valueModal === false) {
+                emptyDetailJob()
+                openModal()
+              } else {
+                emptyDetail();
+                openDrawer();
+              }
+              
             }}
           >
             Tạo

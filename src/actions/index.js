@@ -28,6 +28,14 @@ const {
   ADD_JOB,
   SEARCH_ALL,
   EDIT_JOB,
+  OPEN_MODAL,
+  CLOSE_MODAL,
+  JOB_NOT_CREATE_ORDER,
+  DETAIL_JOB_NOT_CREATE_ORDER,
+  JOB_ORDER,
+  ADD_JOB_ORDER,
+  EMPTY_DETAIL_JOB,
+  OPEN_MODAL_EDIT,
 } = require("./actionTypes");
 
 //Cusomter
@@ -309,7 +317,6 @@ export const actSearchAllRequest = (type, keyword) => {
       "GET",
       null
     ).then((res) => {
-      console.log(res);
       dispatch(actSearchAll(res.data.data));
     });
   };
@@ -330,6 +337,12 @@ export const actCloseDrawer = () => {
 export const actEmptyDetail = () => {
   return {
     type: EMPTY_DETAIL,
+  };
+};
+
+export const actEmptyDetailJob = () => {
+  return {
+    type: EMPTY_DETAIL_JOB,
   };
 };
 
@@ -418,8 +431,84 @@ export const actEditJob = (job) => {
 export const actEditJobRequest = (job) => {
   return (dispatch) => {
     return api("file/job-start/edit", "POST", job).then((res) => {
-      console.log(res)
-      // dispatch(actEditJob(res.data.data));
+      dispatch(actEditJob(res.data.data));
+    });
+  };
+};
+
+export const actOpenModal = () => {
+  return {
+    type: OPEN_MODAL,
+  };
+};
+
+export const actOpenModalEdit = () => {
+  return {
+    type: OPEN_MODAL_EDIT,
+  };
+};
+
+export const actCloseModal = () => {
+  return {
+    type: CLOSE_MODAL,
+  };
+};
+
+export const actJobNotCreateOrder = (jobs) => {
+  return { type: JOB_NOT_CREATE_ORDER, jobs };
+};
+
+export const actJobNotCreateOrderRequest = () => {
+  return (dispatch) => {
+    return api("file/job-start/not-created", "GET", null).then((res) => {
+      dispatch(actJobNotCreateOrder(res.data.data));
+    });
+  };
+};
+
+export const actGetJobNotCreateOrde = (itemJob) => {
+  return {
+    type: DETAIL_JOB_NOT_CREATE_ORDER,
+    itemJob,
+  };
+};
+
+export const actGetJobNotCreateOrdeRequest = (JOB_NO) => {
+  return (dispatch) => {
+    return api(`file/job-order/des/${JOB_NO}`, "GET", null).then((res) => {
+      console.log(res.data)
+      dispatch(actGetJobNotCreateOrde(res.data));
+    });
+  };
+};
+
+export const actGetJobOrder = (jobsorder) => {
+  return {
+    type: JOB_ORDER,
+    jobsorder,
+  };
+};
+
+export const actGetJobOrderRequest = () => {
+  return (dispatch) => {
+    return api("file/job-order", "GET", null).then((res) => {
+      dispatch(actGetJobOrder(res.data.data));
+    });
+  };
+};
+
+export const atctAddJobOrder = (joborder) => {
+  return {
+    type: ADD_JOB_ORDER,
+    joborder,
+  };
+};
+
+export const actAddJobOrderRequest = (joborder) => {
+  return (dispatch) => {
+    return api("file/job-order/add", "POST", joborder).then((res) => {
+      console.log(res);
+      dispatch(atctAddJobOrder(res.data.data));
     });
   };
 };
