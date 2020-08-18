@@ -24,7 +24,6 @@ const ModalCustom = (value) => {
   const onFinish = (values) => {
     const form = new FormData();
     form.append("JOB_NO", values.JOB_NO);
-    // form.append('ORDER_DATE', values.JOB_DATE)
     form.append("CUST_NO", values.CUST_NO);
     form.append("ORDER_FROM", values.ORDER_FROM);
     form.append("ORDER_TO", values.ORDER_TO);
@@ -32,6 +31,7 @@ const ModalCustom = (value) => {
     form.append("CONTAINER_QTY", values.CONTAINER_QTY);
     form.append("CUSTOMS_NO", values.CUSTOMS_NO);
     form.append("CUSTOMS_DATE", values.CUSTOMS_DATE);
+    form.append("SHIPPER", values.SHIPPER);
     form.append("BILL_NO", values.BILL_NO);
     form.append("NW", values.NW);
     form.append("GW", values.GW);
@@ -173,17 +173,17 @@ const ModalCustom = (value) => {
           </Col>
           <Col span={8}>
             <Form.Item label="Order Date" name="JOB_DATE">
-              <Input />
+              <Input disabled />
             </Form.Item>
           </Col>
           <Col span={4}>
             <Form.Item label="Duyệt" name="APPROVE" valuePropName="checked">
-              <Checkbox />
+              <Checkbox disabled/>
             </Form.Item>
           </Col>
           <Col span={6}>
             <Form.Item label="Approve Date" name="Approve">
-              <Input />
+              <Input disabled/>
             </Form.Item>
           </Col>
         </Row>
@@ -206,7 +206,7 @@ const ModalCustom = (value) => {
             </Form.Item>
           </Col>
           <Col span={8}>
-            <Form.Item label="Shipper" name="NV_GIAONHAN">
+            <Form.Item label="Shipper" name="SHIPPER">
               <Input />
             </Form.Item>
           </Col>

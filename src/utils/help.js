@@ -1,3 +1,12 @@
+import {notification} from 'antd'
+
+export  const openNotificationWithIcon = (type, message ,value) => {
+  notification[type]({
+    message: message,
+    description: value,
+  });
+};
+
 export const convertDateTime = (DateTime) => {
   var a = DateTime;
   var b = a

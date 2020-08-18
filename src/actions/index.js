@@ -1,4 +1,5 @@
 import api from "../utils/api";
+import { openNotificationWithIcon } from "../utils/help";
 
 const {
   FETCH_CUSTOMERS,
@@ -417,6 +418,7 @@ export const actAddJobRequest = (job) => {
   return (dispatch) => {
     return api("file/job-start/add", "POST", job).then((res) => {
       dispatch(actAddJob(res.data.data));
+      openNotificationWithIcon("success", "Thành công", "Tạo thành công");
     });
   };
 };
@@ -432,6 +434,7 @@ export const actEditJobRequest = (job) => {
   return (dispatch) => {
     return api("file/job-start/edit", "POST", job).then((res) => {
       dispatch(actEditJob(res.data.data));
+      openNotificationWithIcon("success", "Thành công", "Cập nhật thành công");
     });
   };
 };
@@ -462,6 +465,7 @@ export const actJobNotCreateOrderRequest = () => {
   return (dispatch) => {
     return api("file/job-start/not-created", "GET", null).then((res) => {
       dispatch(actJobNotCreateOrder(res.data.data));
+      openNotificationWithIcon("success", "Thành công", "Tạo thành công");
     });
   };
 };
@@ -475,8 +479,11 @@ export const actGetJobNotCreateOrde = (itemJob) => {
 
 export const actGetJobNotCreateOrdeRequest = (JOB_NO) => {
   return (dispatch) => {
-    return api(`file/job-order/des/${JOB_NO}`, "GET", null).then((res) => {
-      console.log(res.data)
+    return api(
+      `file/job-order/des/job=${JOB_NO}&type=JOB_ORDER`,
+      "GET",
+      null
+    ).then((res) => {
       dispatch(actGetJobNotCreateOrde(res.data));
     });
   };
@@ -507,8 +514,8 @@ export const atctAddJobOrder = (joborder) => {
 export const actAddJobOrderRequest = (joborder) => {
   return (dispatch) => {
     return api("file/job-order/add", "POST", joborder).then((res) => {
-      console.log(res);
       dispatch(atctAddJobOrder(res.data.data));
+      openNotificationWithIcon("success", "Thành công", "Tạo thành công");
     });
   };
 };
