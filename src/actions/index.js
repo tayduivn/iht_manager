@@ -259,7 +259,7 @@ export const actFetchAgents = (agents) => {
 
 export const actFetchAgentsRequest = () => {
   return (dispatch) => {
-    return api("data-basic/customer/type=4", "GET", null).then((res) => {
+    return api("data-basic/customer/type=3", "GET", null).then((res) => {
       dispatch(actFetchAgents(res.data.data));
     });
   };
@@ -465,7 +465,6 @@ export const actJobNotCreateOrderRequest = () => {
   return (dispatch) => {
     return api("file/job-start/not-created", "GET", null).then((res) => {
       dispatch(actJobNotCreateOrder(res.data.data));
-      openNotificationWithIcon("success", "Thành công", "Tạo thành công");
     });
   };
 };
@@ -477,10 +476,10 @@ export const actGetJobNotCreateOrde = (itemJob) => {
   };
 };
 
-export const actGetJobNotCreateOrdeRequest = (JOB_NO) => {
+export const actGetJobNotCreateOrdeRequest = (JOB_NO, type) => {
   return (dispatch) => {
     return api(
-      `file/job-order/des/job=${JOB_NO}&type=JOB_ORDER`,
+      `file/job-order/des/job=${JOB_NO}&type=${type}`,
       "GET",
       null
     ).then((res) => {

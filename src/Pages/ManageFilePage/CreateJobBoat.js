@@ -9,15 +9,15 @@ import {
 import { Space, Button } from "antd";
 import TableCustom from "../../components/Table";
 import SearchApi from "../../components/Search/SearchApi";
-import ModalCustom from "../../components/Modal";
-import ModalEdit from "../../components/Modal/ModalEdit";
+import ModalEditBoat from "../../components/Modal/ModalEditBoat";
+import ModalCreateBoat from "../../components/Modal/ModalCreateBoat";
 
-const CreateJobOrder = () => {
+const CreateJobBoat = () => {
   const dispatch = useDispatch();
   const jobs = useSelector((state) => state.joborder);
   const fetchJobs = () => dispatch(actGetJobOrderRequest());
   const getJobOrder = (JOB_NO) =>
-    dispatch(actGetJobNotCreateOrdeRequest(JOB_NO,'JOB_ORDER'));
+    dispatch(actGetJobNotCreateOrdeRequest(JOB_NO, 'JOB_ORDER_BOAT'));
 
     const itemJob = useSelector(state=> state.itemCustomer)
 
@@ -80,9 +80,9 @@ const CreateJobOrder = () => {
     <Fragment>
       {SearchApi(onSearch, state)}
       {TableCustom(jobs, columns)}
-      {state === false ? <ModalEdit changeEdit={changeEdit} itemJob={itemJob}/> : <ModalCustom />}
+      {state === false ? <ModalEditBoat changeEdit={changeEdit} itemJob={itemJob}/> : <ModalCreateBoat />}
     </Fragment>
   );
 };
 
-export default CreateJobOrder;
+export default CreateJobBoat;

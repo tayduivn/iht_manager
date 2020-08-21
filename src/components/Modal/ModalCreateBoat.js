@@ -5,23 +5,30 @@ import {
   actCloseModal,
   actJobNotCreateOrderRequest,
   actGetJobRequest,
+  actFetchCarriersRequest,
+  actFetchAgentsRequest,
   actAddJobOrderRequest,
 } from "../../actions";
 // import _ from "lodash";
 
 const { Option } = Select;
 
-const ModalCustom = () => {
+const ModalCreateBoat = () => {
   const dispatch = useDispatch();
   const closeModal = () => dispatch(actCloseModal());
   const stateModal = useSelector((state) => state.isDrawer);
   const jobs = useSelector((state) => state.jobsnco);
   const fetchJobNotCreateOrder = () => dispatch(actJobNotCreateOrderRequest());
   const getJob = (JOB_NO) => dispatch(actGetJobRequest(JOB_NO));
+  const getCarrier = () => dispatch(actFetchCarriersRequest());
+  const getAgent = () => dispatch(actFetchAgentsRequest());
+  const carriers = useSelector((state) => state.carriers);
+  const agents = useSelector((state) => state.agents);
   const itemJob = useSelector((state) => state.itemCustomer);
   const addJobOrder = (value) => dispatch(actAddJobOrderRequest(value));
 
   const onFinish = (values) => {
+    console.log(values);
     const form = new FormData();
     form.append("JOB_NO", values.JOB_NO);
     form.append("CUST_NO", values.CUST_NO);
@@ -43,11 +50,14 @@ const ModalCustom = () => {
     form.append("NOTE", values.NOTE);
     form.append("INPUT_USER", localStorage.getItem("USER_NO"));
     form.append("BRANCH_ID", localStorage.getItem("BRANCH_ID"));
-    form.append("CONSIGNEE", values.CONSIGNEE);
+    form.append("CUST_NO2", values.CUST_NO2);
+    form.append("CUST_NO3", values.CUST_NO3);
     addJobOrder(form);
   };
   useEffect(() => {
     fetchJobNotCreateOrder();
+    getCarrier();
+    getAgent();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -118,12 +128,12 @@ const ModalCustom = () => {
       value: itemJob.POL,
     },
     {
-      name: "POD",
-      value: itemJob.POD,
-    },
-    {
       name: "PO_NO",
       value: itemJob.PO_NO,
+    },
+    {
+      name: "POD",
+      value: itemJob.POD,
     },
     {
       name: "ETA_ETD",
@@ -147,7 +157,7 @@ const ModalCustom = () => {
     <Modal
       title="Thông tin"
       visible={stateModal}
-      width="900px"
+      width="1000px"
       footer={[]}
       onCancel={closeModal}
     >
@@ -205,6 +215,50 @@ const ModalCustom = () => {
           <Col span={18}>
             <Form.Item name="CUST_NAME">
               <Input />
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row gutter={24}>
+          <Col span={12}>
+            <Form.Item label="Carriers" name="CUST_NO2">
+              <Select
+                placeholder="Chọn"
+                showSearch
+                optionFilterProp="children"
+                filterOption={(input, option) =>
+                  option.children.toLowerCase().indexOf(input.toLowerCase()) >=
+                  0
+                }
+              >
+                {carriers.map((item, index) => {
+                  return (
+                    <Option key={index} value={item.CUST_NO}>
+                      {`${item.CUST_NO} | ${item.CUST_NAME}`}
+                    </Option>
+                  );
+                })}
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item label="Agent" name="CUST_NO3">
+              <Select
+                placeholder="Chọn"
+                showSearch
+                optionFilterProp="children"
+                filterOption={(input, option) =>
+                  option.children.toLowerCase().indexOf(input.toLowerCase()) >=
+                  0
+                }
+              >
+                {agents.map((item, index) => {
+                  return (
+                    <Option key={index} value={item.CUST_NO}>
+                      {`${item.CUST_NO} | ${item.CUST_NAME}`}
+                    </Option>
+                  );
+                })}
+              </Select>
             </Form.Item>
           </Col>
         </Row>
@@ -321,4 +375,4 @@ const ModalCustom = () => {
   );
 };
 
-export default ModalCustom;
+export default ModalCreateBoat;
