@@ -37,6 +37,10 @@ const {
   ADD_JOB_ORDER,
   EMPTY_DETAIL_JOB,
   OPEN_MODAL_EDIT,
+  LIST_PENDING,
+  LIST_APPROVED,
+  APPROVED,
+  ITEM_JOB_PAYMENT,
 } = require("./actionTypes");
 
 //Cusomter
@@ -356,7 +360,7 @@ export const actFetchPayments = (payments) => {
 
 export const actFetchPaymentsRequeset = () => {
   return (dispatch) => {
-    return api("payment/advance-slip", "GET", null).then((res) => {
+    return api("payment/lender", "GET", null).then((res) => {
       dispatch(actFetchPayments(res.data.data));
     });
   };
@@ -371,11 +375,9 @@ export const actGetPayment = (itemPayment) => {
 
 export const actGetPaymentRequeset = (LENDER_NO) => {
   return (dispatch) => {
-    return api(`payment/advance-slip/des/${LENDER_NO}`, "GET", null).then(
-      (res) => {
-        dispatch(actGetPayment(res.data.data));
-      }
-    );
+    return api(`payment/lender/des/${LENDER_NO}`, "GET", null).then((res) => {
+      dispatch(actGetPayment(res.data.data));
+    });
   };
 };
 
@@ -403,6 +405,22 @@ export const actGetJobRequest = (JOB_NO) => {
   return (dispatch) => {
     return api(`file/job-start/des/${JOB_NO}`, "GET", null).then((res) => {
       dispatch(actGetJob(res.data.data));
+    });
+  };
+};
+
+export const actItemJobPayment = (itemJob) => {
+  return {
+    type: ITEM_JOB_PAYMENT,
+    itemJob,
+  };
+};
+
+export const actItemJobPaymentRequest = (JOB_NO) => {
+  
+  return (dispatch) => {
+    return api(`file/job-start/des/${JOB_NO}`, "GET", null).then((res) => {
+      dispatch(actItemJobPayment(res.data.data));
     });
   };
 };
@@ -515,6 +533,53 @@ export const actAddJobOrderRequest = (joborder) => {
     return api("file/job-order/add", "POST", joborder).then((res) => {
       dispatch(atctAddJobOrder(res.data.data));
       openNotificationWithIcon("success", "Thành công", "Tạo thành công");
+    });
+  };
+};
+
+export const actListPending = (listPending) => {
+  return {
+    type: LIST_PENDING,
+    listPending,
+  };
+};
+
+export const actListPendingRequest = () => {
+  return (dispatch) => {
+    return api("file/approved/list-pending", "GET", null).then((res) => {
+      dispatch(actListPending(res.data.data));
+    });
+  };
+};
+
+export const actListApproved = (listApproved) => {
+  return {
+    type: LIST_APPROVED,
+    listApproved,
+  };
+};
+
+export const actListApprovedRequest = () => {
+  return (dispatch) => {
+    return api("file/approved/list-approved", "GET", null).then((res) => {
+      dispatch(actListApproved(res.data.data));
+    });
+  };
+};
+
+export const actApproved = (job_no) => {
+  return {
+    type: APPROVED,
+    job_no,
+  };
+};
+
+export const actApprovedRequest = (JOB_NO) => {
+  return (dispatch) => {
+    return api("file/approved", "POST", JOB_NO).then((res) => {
+      console.log(res);
+      dispatch(actApproved(res.data.data));
+      openNotificationWithIcon("success", "Thành công", "Cập nhật thành công");
     });
   };
 };

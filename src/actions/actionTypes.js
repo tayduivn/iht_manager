@@ -45,4 +45,10 @@ export const JOB_NOT_CREATE_ORDER = "JOB_NOT_CREATE_ORDER";
 export const DETAIL_JOB_NOT_CREATE_ORDER = "DETAIL_JOB_NOT_CREATE_ORDER";
 
 export const ADD_JOB_ORDER = "ADD_JOB_ORDER";
-export const JOB_ORDER = 'JOB_ORDER'
+export const JOB_ORDER = "JOB_ORDER";
+
+export const LIST_PENDING = "LIST_PENDING";
+export const LIST_APPROVED = "LIST_APPROVED";
+
+export const APPROVED = 'APPROVED'
+export const ITEM_JOB_PAYMENT = 'ITEM_JOB_PAYMENT'

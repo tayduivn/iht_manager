@@ -1,20 +1,20 @@
-import React, { Fragment, useEffect } from "react";
-import Search from "../../components/Search";
+import React, { Fragment, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   actFetchPaymentsRequeset,
   actOpenDrawer,
   actGetPaymentRequeset,
+  actSearchAllRequest,
 } from "../../actions";
 import { Space, Button } from "antd";
 import TableCustom from "../../components/Table";
-import DrawerCustom from "../../components/Drawer";
-import _ from "lodash";
+import SearchApi from '../../components/Search/SearchApi'
+import ModalPayment from "../../components/Modal/ModalPayment";
 
 const Payment = () => {
   const payments = useSelector((state) => state.payments);
   const itemPayment = useSelector((state) => state.itemCustomer);
-  const staffs = useSelector((state) => state.staffs);
+  const itemJobPayment = useSelector((state) => state.itemJobPayment);
   const dispatch = useDispatch();
   const fetchPayments = () => dispatch(actFetchPaymentsRequeset());
   const getPayment = (LENDER_NO) => dispatch(actGetPaymentRequeset(LENDER_NO));
@@ -24,25 +24,6 @@ const Payment = () => {
     fetchPayments();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const searchs = [
-    {
-      label: "Loại (Kinds)",
-      selects: [
-        {
-          text: "Mã Khách Hàng",
-          value: "CUST_NO",
-        },
-        {
-          text: "Tên Khách Hàng",
-          value: "CUST_NAME",
-        },
-      ],
-    },
-    {
-      label: "Nội Dung (Contents)",
-    },
-  ];
 
   const columns = [
     {
@@ -81,85 +62,29 @@ const Payment = () => {
     },
   ];
 
-  const fields = [
-    {
-      name: "LENDER_NO",
-      value: itemPayment.LENDER_NO,
-      label: "Advance No",
-      disabled: true,
-    },
-    {
-      name: "LENDER_NAME",
-      value: itemPayment.LENDER_NAME,
-      label: "Type",
-      select: true,
-    },
-    {
-      name: "LENDER_DATE",
-      value: itemPayment.LENDER_DATE,
-      label: "Date",
-      disabled: true,
-    },
+  console.log(itemJobPayment);
 
-    {
-      name: "PNL_NO",
-      value: itemPayment.PNL_NO,
-      label: "Advance Staff",
-      select: true,
-      dataSelect: staffs,
-    },
-    {
-      name: "DOR_NO",
-      value: itemPayment.DOR_NO,
-      label: "Kinds of Money",
-      select: true,
-    },
-    { name: "JOB_NO", value: itemPayment.JOB_NO, label: "Job No" },
-    {
-      name: "CUST_NAME",
-      value: itemPayment.CUST_NAME,
-      label: "Customer",
-      disabled: true,
-    },
-    {
-      name: "ORDER_FROM",
-      value: itemPayment.ORDER_FROM,
-      label: "Order From",
-      disabled: true,
-    },
-    {
-      name: "ORDER_TO",
-      value: itemPayment.ORDER_TO,
-      label: "Order To",
-      disabled: true,
-    },
-    {
-      name: "TOTAL_AMT",
-      value: itemPayment.TOTAL_AMT,
-      label: "Amount To",
-    },
-    {
-      name: "LEND_REASON",
-      value: itemPayment.LEND_REASON,
-      label: "Reasons",
-    },
-  ];
-
-  const onFinish = (values) => {
-    // const form = new FormData();
-    console.log(values);
-    var data = _.find(staffs, { PNL_NO: values });
-    if (data === undefined) {
-      return null;
+  const onSearch = (values) => {
+    if (values.keyword) {
+      dispatch(actSearchAllRequest(values.type, values.keyword));
     } else {
-      console.log(data.PNL_NAME);
+      fetchPayments();
     }
   };
+
+  const [state, setState] = useState(true)
+  const changeEdit = () => {
+    setState(true)
+  }
+
+  let pay = 'payment'
+
+
   return (
     <Fragment>
-      {Search(searchs)}
+      {SearchApi(onSearch, state,  pay)}
       {TableCustom(payments, columns)}
-      {DrawerCustom(fields, itemPayment, onFinish)}
+      {state === false ? <ModalPayment changeEdit={changeEdit} itemJob={itemPayment}/> : <ModalPayment />}
     </Fragment>
   );
 };

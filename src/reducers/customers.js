@@ -26,7 +26,6 @@ const customers = (state = initialState, action) => {
       state.unshift(action.customer);
       return [...state];
     case EDIT_CUSTOMER:
-      // state = action.customer;
       index = findIndex(state, action.customer.CUST_NO);
       state[index] = action.customer;
       return [...state];

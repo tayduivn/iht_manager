@@ -16,6 +16,7 @@ import Payment from "./Pages/ReceiptsExpensesPage/Payment";
 import CreateFollow from "./Pages/ManageFilePage/CreateFollow";
 import CreateJobOrder from "./Pages/ManageFilePage/CreateJobOrder";
 import CreateJobBoat from "./Pages/ManageFilePage/CreateJobBoat";
+import Pending from "./Pages/ManageFilePage/Pending";
 
 const routes = [
   {
@@ -100,6 +101,11 @@ const routes = [
             name: "Tạo Job Book Tàu",
             path: "/dasboard/quanlythuchi/taojobbooktau",
             component: CreateJobBoat,
+          },
+          {
+            name: "Duyệt Job Order",
+            path: "/dasboard/quanlythuchi/duyetjoborder",
+            component: Pending,
           },
         ],
       },

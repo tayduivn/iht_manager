@@ -5,6 +5,8 @@ import { useDispatch } from "react-redux";
 import {
   actFetchStaffsRequest,
   actFetchCustomersRequeset,
+  actFetchJobsRequest,
+  actItemJobPaymentRequest,
 } from "../../actions";
 
 const { TextArea } = Input;
@@ -13,10 +15,13 @@ const CustomizedForm = ({ fields, onFinish, item }) => {
   const dispatch = useDispatch();
   const fetchStaffs = () => dispatch(actFetchStaffsRequest());
   const fetchCustomers = () => dispatch(actFetchCustomersRequeset());
+  const fetchJobs = () => dispatch(actFetchJobsRequest());
+  const getJob = (JOB_NO) => dispatch(actItemJobPaymentRequest(JOB_NO));
 
   useEffect(() => {
     fetchStaffs();
     fetchCustomers();
+    fetchJobs();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -58,13 +63,29 @@ const CustomizedForm = ({ fields, onFinish, item }) => {
       );
     } else if (field.name === "CUST_NO") {
       return field.dataSelect.map((item, index) => (
-        <Option key={index} value={item.CUST_NO}>{`${item.CUST_NO} | ${item.CUST_NAME}`}</Option>
+        <Option
+          key={index}
+          value={item.CUST_NO}
+        >{`${item.CUST_NO} | ${item.CUST_NAME}`}</Option>
       ));
     }
   };
 
+  const onChange = (value) => {
+    // console.log(value);
+    getJob(value)
+  };
+
+  const [form] = Form.useForm();
+
   return (
-    <Form {...layout} fields={fields} onFinish={onFinish}>
+    <Form
+      {...layout}
+      fields={fields}
+      form={form}
+      onFinish={onFinish}
+      autoComplete="off"
+    >
       <p
         className="site-description-item-profile-p"
         style={{ marginBottom: 28 }}
@@ -82,13 +103,29 @@ const CustomizedForm = ({ fields, onFinish, item }) => {
               <Select
                 showSearch
                 optionFilterProp="children"
-                
                 filterOption={(input, option) =>
                   option.children.toLowerCase().indexOf(input.toLowerCase()) >=
                   0
                 }
               >
                 {checkSelect(field)}
+              </Select>
+            ) : field.select2 ? (
+              <Select
+                showSearch
+                optionFilterProp="children"
+                filterOption={(input, option) =>
+                  option.children.toLowerCase().indexOf(input.toLowerCase()) >=
+                  0
+                }
+                onChange={onChange}              
+              >
+                {field.dataSelect.map((item, index) => (
+                  <Option
+                    key={index}
+                    value={item.JOB_NO}
+                  >{`${item.JOB_NO} | ${item.CUST_NAME}`}</Option>
+                ))}
               </Select>
             ) : field.date === true ? (
               <Input type="date" />

@@ -12,7 +12,10 @@ import itemCustomer from "./itemCustomer";
 import payments from "./payments";
 import jobs from "./jobs";
 import jobsnco from "./jobsnco";
-import joborder from './joborder'
+import joborder from "./joborder";
+import listPending from "./listPending";
+import listApproved from "./listApproved";
+import itemJobPayment from "./itemJobPayment";
 
 const allReducer = combineReducers({
   customers,
@@ -28,7 +31,10 @@ const allReducer = combineReducers({
   payments,
   jobs,
   jobsnco,
-  joborder
+  joborder,
+  listPending,
+  listApproved,
+  itemJobPayment
 });
 
 export default allReducer;

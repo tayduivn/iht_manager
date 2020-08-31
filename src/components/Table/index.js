@@ -1,8 +1,7 @@
 import React from "react";
 import { Table } from "antd";
 import _ from "lodash";
-import { useSelector} from "react-redux";
-
+import { useSelector } from "react-redux";
 
 const TableCustom = (data, columns) => {
   const searchs = useSelector((state) => state.searchReducer);
@@ -27,8 +26,31 @@ const TableCustom = (data, columns) => {
     data = _.filter(data, function (o) {
       return _.toLower(o.JOB_NO).indexOf(_.toLower(searchs.keyword)) !== -1;
     });
-  } 
-  
+  } else if (searchs.kinds === "ORDER_DATE") {
+    data = _.filter(data, function (o) {
+      return _.toLower(o.ORDER_DATE).indexOf(_.toLower(searchs.keyword)) !== -1;
+    });
+  } else if (searchs.kinds === "Chi_Tam_Ung") {
+    data = _.filter(data, function (o) {
+      return _.toLower(o.LENDER_NAME).indexOf(_.toLower("Chi Tam Ung")) !== -1;
+    });
+  } else if (searchs.kinds === "Phieu_Tam_Ung") {
+    data = _.filter(data, function (o) {
+      return (
+        _.toLower(o.LENDER_NAME).indexOf(_.toLower("Phieu Tam Ung")) !== -1
+      );
+    });
+  } else if (searchs.kinds === "Chi_Truc_Tiep") {
+    data = _.filter(data, function (o) {
+      return (
+        _.toLower(o.LENDER_NAME).indexOf(_.toLower("Chi Truc Tiep")) !== -1
+      );
+    });
+  }else if (searchs.kinds === "LENDER_NO") {
+    data = _.filter(data, function (o) {
+      return _.toLower(o.LENDER_NO).indexOf(_.toLower(searchs.keyword)) !== -1;
+    });
+  }
 
   return (
     <Table
