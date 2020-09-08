@@ -75,7 +75,6 @@ const CreateJobOrder = () => {
     setState(true)
   }
 
-
   return (
     <Fragment>
       {SearchApi(onSearch, state)}

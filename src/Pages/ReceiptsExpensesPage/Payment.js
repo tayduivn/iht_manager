@@ -2,23 +2,25 @@ import React, { Fragment, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   actFetchPaymentsRequeset,
-  actOpenDrawer,
-  actGetPaymentRequeset,
+  actOpenModalEdit,
   actSearchAllRequest,
+  actGetPaymentRequeset
 } from "../../actions";
 import { Space, Button } from "antd";
 import TableCustom from "../../components/Table";
 import SearchApi from '../../components/Search/SearchApi'
 import ModalPayment from "../../components/Modal/ModalPayment";
+import ModalEditPayment from "../../components/Modal/ModalEditPayment";
 
 const Payment = () => {
   const payments = useSelector((state) => state.payments);
-  const itemPayment = useSelector((state) => state.itemCustomer);
-  const itemJobPayment = useSelector((state) => state.itemJobPayment);
   const dispatch = useDispatch();
   const fetchPayments = () => dispatch(actFetchPaymentsRequeset());
   const getPayment = (LENDER_NO) => dispatch(actGetPaymentRequeset(LENDER_NO));
-  const openDrawer = () => dispatch(actOpenDrawer());
+  const openModalEdit = () => dispatch(actOpenModalEdit());
+
+  const [state, setState] = useState(true)
+
 
   useEffect(() => {
     fetchPayments();
@@ -50,8 +52,9 @@ const Payment = () => {
             <Button
               type="primary"
               onClick={(e) => {
-                openDrawer();
+                setState(false)
                 getPayment(record.LENDER_NO);
+                openModalEdit()
               }}
             >
               Xem
@@ -62,7 +65,6 @@ const Payment = () => {
     },
   ];
 
-  console.log(itemJobPayment);
 
   const onSearch = (values) => {
     if (values.keyword) {
@@ -72,19 +74,20 @@ const Payment = () => {
     }
   };
 
-  const [state, setState] = useState(true)
+  
   const changeEdit = () => {
     setState(true)
   }
 
   let pay = 'payment'
 
+  console.log(state)
 
   return (
     <Fragment>
       {SearchApi(onSearch, state,  pay)}
       {TableCustom(payments, columns)}
-      {state === false ? <ModalPayment changeEdit={changeEdit} itemJob={itemPayment}/> : <ModalPayment />}
+      {state === false ? <ModalEditPayment changeEdit={changeEdit}/> : <ModalPayment />}
     </Fragment>
   );
 };

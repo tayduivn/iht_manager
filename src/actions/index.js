@@ -41,6 +41,9 @@ const {
   LIST_APPROVED,
   APPROVED,
   ITEM_JOB_PAYMENT,
+  ADD_PAYMENT,
+  EMPTY_ITEM_JOB_PAYMENT,
+  EDIT_PAYMENT,
 } = require("./actionTypes");
 
 //Cusomter
@@ -381,6 +384,38 @@ export const actGetPaymentRequeset = (LENDER_NO) => {
   };
 };
 
+export const actPayment = (payment) => {
+  return {
+    type: ADD_PAYMENT,
+    payment,
+  };
+};
+
+export const actPaymentRequest = (payment) => {
+  return (dispatch) => {
+    return api("payment/lender/add", "POST", payment).then((res) => {
+      dispatch(actPayment(res.data.data));
+      openNotificationWithIcon("success", "Thành công", "Tạo thành công");
+    });
+  };
+};
+
+export const actEditPayment = (payment) => {
+  return {
+    type: EDIT_PAYMENT,
+    payment,
+  };
+};
+
+export const actEditPaymentRequest = (payment) => {
+  return (dispatch) => {
+    return api("payment/lender/edit", "POST", payment).then((res) => {
+      dispatch(actEditPayment(res.data.data));
+      openNotificationWithIcon("success", "Thành công", "Cập nhật thành công");
+    });
+  };
+};
+
 //Job
 export const actFetchJobs = (jobs) => {
   return { type: FETCH_JOBS, jobs };
@@ -417,7 +452,6 @@ export const actItemJobPayment = (itemJob) => {
 };
 
 export const actItemJobPaymentRequest = (JOB_NO) => {
-  
   return (dispatch) => {
     return api(`file/job-start/des/${JOB_NO}`, "GET", null).then((res) => {
       dispatch(actItemJobPayment(res.data.data));
@@ -581,5 +615,11 @@ export const actApprovedRequest = (JOB_NO) => {
       dispatch(actApproved(res.data.data));
       openNotificationWithIcon("success", "Thành công", "Cập nhật thành công");
     });
+  };
+};
+
+export const actEmptyItemDetailJob = () => {
+  return {
+    type: EMPTY_ITEM_JOB_PAYMENT,
   };
 };

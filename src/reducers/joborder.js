@@ -19,7 +19,6 @@ const joborder = (state = initialState, action) => {
       state = action.jobsorder;
       return [...state];
     case ADD_JOB_ORDER:
-        console.log(action)
       state.unshift(action.joborder);
       return [...state];
     // case EDIT_JOB:
