@@ -1,7 +1,6 @@
 const {
-  LIST_PENDING,
-  APPROVED,
-  LIST_PAID_KH,
+  LIST_PEDING_KH,
+  APPROVE_KH,
 } = require("../actions/actionTypes");
 
 var initialState = [];
@@ -16,22 +15,19 @@ const findIndex = (data, JOB_NO) => {
   return result;
 };
 
-const listPending = (state = initialState, action) => {
+const listPendingKH = (state = initialState, action) => {
   var index = -1;
   switch (action.type) {
-    case LIST_PENDING:
-      state = action.listPending;
+    case LIST_PEDING_KH:
+      state = action.listPendingKH;
       return [...state];
-    case APPROVED:
-      index = findIndex(state, action.job_no.JOB_NO);
+    case APPROVE_KH:
+      index = findIndex(state, action.listApproved);
       state.splice(index, 1);
-      return [...state];
-    case LIST_PAID_KH:
-      state = action.listPaidKH;
       return [...state];
     default:
       return state;
   }
 };
 
-export default listPending;
+export default listPendingKH;

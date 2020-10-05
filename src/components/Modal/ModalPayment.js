@@ -27,7 +27,7 @@ const ModalPayment = () => {
   const onFinish = (values) => {
     console.log(values);
     const form = new FormData();
-    form.append("AMOUNT_1", values.AMOUNT_1);
+    form.append("TOTAL_AMT", "0");
     form.append("CONTAINER_QTY", values.CONTAINER_QTY);
     form.append("CUST_NO", values.CUST_NO);
     form.append("DOR_NO", values.DOR_NO);
@@ -188,37 +188,6 @@ const ModalPayment = () => {
           </Col>
         </Row>
         <Row gutter={24}>
-          <Col span={12}>
-            <Form.Item label="Amount 1" name="AMOUNT_1">
-              <Input />
-            </Form.Item>
-          </Col>
-          {/* <Col span={12}>
-            <Form.Item label="Amount 2" name="AMOUNT_2">
-              <Input />
-            </Form.Item>
-          </Col> */}
-        </Row>
-        {/* <Row gutter={24}>
-          <Col span={12}>
-            <Form.Item label="Amount 3" name="AMOUNT_3">
-              <Input />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item label="Amount 4" name="AMOUNT_4">
-              <Input />
-            </Form.Item>
-          </Col>
-        </Row>
-        <Row gutter={24}>
-          <Col span={12}>
-            <Form.Item label="Amount 5" name="AMOUNT_5">
-              <Input />
-            </Form.Item>
-          </Col>
-        </Row> */}
-        <Row gutter={24}>
           <Col span={24}>
             <Form.Item label="Reasons" name="LEND_REASON">
               <Input.TextArea />
@@ -228,12 +197,9 @@ const ModalPayment = () => {
         <Form.Item style={{ textAlign: "right" }}>
           <Button
             type="primary"
-            htmlType="submit"
-            // onClick={() => {
-            //   closeModal();
-            // }}
+            htmlType="submit"         
           >
-            Save
+            Lưu
           </Button>
         </Form.Item>
       </Form>

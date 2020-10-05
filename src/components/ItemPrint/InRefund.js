@@ -1,0 +1,220 @@
+import React, { useEffect } from "react";
+import { Typography, Form, Button, Row, Col, Select, Input } from "antd";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  actFetchCarriersRequest,
+  actGetJobOrderRequest,
+  actFetchAgentsRequest,
+} from "../../actions";
+import { convertDateTime } from "../../utils/help";
+
+const { Title } = Typography;
+
+const { Option } = Select;
+
+export default function InRefund() {
+  const dispatch = useDispatch();
+  const fetchCarriers = () => dispatch(actFetchCarriersRequest());
+  const carriers = useSelector((state) => state.carriers);
+  const fetchJobs = () => dispatch(actGetJobOrderRequest());
+  const jobs = useSelector((state) => state.joborder);
+  const customers = useSelector((state) => state.customers);
+  const fetchAgents = () => dispatch(actFetchAgentsRequest());
+  const agents = useSelector((state) => state.agents);
+
+  useEffect(() => {
+    fetchCarriers();
+    fetchJobs();
+    fetchAgents();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  function onFinishJobOrder(values) {
+    var from = undefined;
+    var to = undefined;
+    if (values.FROM_DATE && values.TO_DATE) {
+      var yearFrom = values.FROM_DATE.slice(0, 4);
+      var dayFrom = values.FROM_DATE.slice(5, 7);
+      var monthFrom = values.FROM_DATE.slice(8, 10);
+
+      var yearTo = values.TO_DATE.slice(0, 4);
+      var dayTo = values.TO_DATE.slice(5, 7);
+      var monthTo = values.TO_DATE.slice(8, 10);
+
+      from = yearFrom + monthFrom + dayFrom;
+      to = yearTo + monthTo + dayTo;
+    }
+
+    window.open(
+      `https://job-api.ihtvn.com/api/v1/print/file/refund/type=${values.SELECT}&custno=${values.CUST_NO}&jobno=${values.JOB_NO}&fromdate=${from}&todate=${to}}`
+    );
+  }
+
+  return (
+    <>
+      <Title level={4} style={{ color: "red" }}>
+        Báo Biểu Refund
+      </Title>
+      <Form onFinish={onFinishJobOrder}>
+        <Row gutter={24}>
+          <Col span={6}>
+            <Form.Item label="Loại" name="SELECT">
+              <Select>
+                <Option key="1">Refund Hãng Tàu</Option>
+                <Option key="2">Refund Khách Hàng</Option>
+                <Option key="3">Refund Đại Lý</Option>
+              </Select>
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row gutter={24}>
+          <Col span={10}>
+            <Form.Item
+              noStyle
+              shouldUpdate={(prevValues, currentValues) =>
+                prevValues.SELECT !== currentValues.SELECT
+              }
+            >
+              {({ getFieldValue }) =>
+                getFieldValue("SELECT") === "1" ? (
+                  <Form.Item label="Hãng Tàu" name="CUST_NO">
+                    <Select
+                      placeholder="Chọn Hãng Tàu"
+                      showSearch
+                      optionFilterProp="children"
+                      filterOption={(input, option) =>
+                        option.children
+                          .toLowerCase()
+                          .indexOf(input.toLowerCase()) >= 0
+                      }
+                    >
+                      {carriers.map((item, index) => {
+                        return (
+                          <Option key={index} value={item.CUST_NO}>
+                            {item.CUST_NO + " | " + item.CUST_NAME}
+                          </Option>
+                        );
+                      })}
+                    </Select>
+                  </Form.Item>
+                ) : null
+              }
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row gutter={24}>
+          <Col span={14}>
+            <Form.Item
+              noStyle
+              shouldUpdate={(prevValues, currentValues) =>
+                prevValues.SELECT !== currentValues.SELECT
+              }
+            >
+              {({ getFieldValue }) =>
+                getFieldValue("SELECT") === "2" ? (
+                  <Form.Item label="Mã Khách Hàng" name="CUST_NO">
+                    <Select
+                      placeholder="Chọn Mã Khách Hàng"
+                      showSearch
+                      optionFilterProp="children"
+                      filterOption={(input, option) =>
+                        option.children
+                          .toLowerCase()
+                          .indexOf(input.toLowerCase()) >= 0
+                      }
+                    >
+                      {customers.map((item, index) => {
+                        return (
+                          <Option key={index} value={item.CUST_NO}>
+                            {item.CUST_NO + " | " + item.CUST_NAME}
+                          </Option>
+                        );
+                      })}
+                    </Select>
+                  </Form.Item>
+                ) : null
+              }
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row gutter={24}>
+          <Col span={14}>
+            <Form.Item
+              noStyle
+              shouldUpdate={(prevValues, currentValues) =>
+                prevValues.SELECT !== currentValues.SELECT
+              }
+            >
+              {({ getFieldValue }) =>
+                getFieldValue("SELECT") === "3" ? (
+                  <Form.Item label="Đại Lý" name="CUST_NO">
+                    <Select
+                      placeholder="Chọn Đại Lý"
+                      showSearch
+                      optionFilterProp="children"
+                      filterOption={(input, option) =>
+                        option.children
+                          .toLowerCase()
+                          .indexOf(input.toLowerCase()) >= 0
+                      }
+                    >
+                      {agents.map((item, index) => {
+                        return (
+                          <Option key={index} value={item.CUST_NO}>
+                            {item.CUST_NO + " | " + item.CUST_NAME}
+                          </Option>
+                        );
+                      })}
+                    </Select>
+                  </Form.Item>
+                ) : null
+              }
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row gutter={24}>
+          <Col span={10}>
+            <Form.Item label="Job No" name="JOB_NO">
+              <Select
+                placeholder="Danh Sách Job"
+                showSearch
+                optionFilterProp="children"
+                filterOption={(input, option) =>
+                  option.children.toLowerCase().indexOf(input.toLowerCase()) >=
+                  0
+                }
+              >
+                {jobs.map((item, index) => {
+                  return (
+                    <Option key={index} value={item.JOB_NO}>
+                      {item.JOB_NO + "  |  " + convertDateTime(item.ORDER_DATE)}
+                    </Option>
+                  );
+                })}
+              </Select>
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row gutter={24}>
+          <Col span={8}>
+            <Form.Item label="From Date" name="FROM_DATE">
+              <Input type="date" />
+            </Form.Item>
+          </Col>
+          <Col span={8}>
+            <Form.Item label="To Date" name="TO_DATE">
+              <Input type="date" />
+            </Form.Item>
+          </Col>
+        </Row>
+        <Button
+          type="primary"
+          htmlType="submit"
+          style={{ marginLeft: 10, width: 100 }}
+        >
+          Xem
+        </Button>
+      </Form>
+    </>
+  );
+}

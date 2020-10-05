@@ -7,6 +7,8 @@ import {
   DETAIL_JOB,
   DETAIL_JOB_NOT_CREATE_ORDER,
   EMPTY_DETAIL_JOB,
+  DETAIL_DEBIT_NOTE_NOT_CREATE,
+  DETAIL_DEBIT_NOTE,
 } from "../actions/actionTypes";
 
 var initialState = {};
@@ -29,6 +31,12 @@ const itemEditing = (state = initialState, action) => {
       state = action.itemJob;
       return { ...state };
     case DETAIL_JOB_NOT_CREATE_ORDER:
+      state = action.itemJob;
+      return { ...state };
+    case DETAIL_DEBIT_NOTE_NOT_CREATE:
+      state = action.itemJob;
+      return { ...state };
+    case DETAIL_DEBIT_NOTE:
       state = action.itemJob;
       return { ...state };
     case EMPTY_DETAIL:

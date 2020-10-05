@@ -17,6 +17,11 @@ import CreateFollow from "./Pages/ManageFilePage/CreateFollow";
 import CreateJobOrder from "./Pages/ManageFilePage/CreateJobOrder";
 import CreateJobBoat from "./Pages/ManageFilePage/CreateJobBoat";
 import Pending from "./Pages/ManageFilePage/Pending";
+import PaymentRequest from "./Pages/ReceiptsExpensesPage/PaymentRequest";
+import DuyetThanhToan from "./Pages/ReceiptsExpensesPage/DuyetThanhToan";
+import FindData from "./Pages/ReceiptsExpensesPage/FineData";
+import PrintManager from "./Pages/ManageFilePage/PrintManager";
+import BoatCont from "./Pages/ReceiptsExpensesPage/BoatCont";
 
 const routes = [
   {
@@ -72,40 +77,65 @@ const routes = [
       },
       {
         name: "Quản Lý Thu Chi",
-        path: "/dasboard/quanlyhoso",
+        path: "/dasboard/quanlythuchi",
         component: ReceiptsExpensesPage,
         routes: [
           {
             name: "Phiếu Chi Tạm Ứng",
-            path: "/dasboard/quanlyhoso/phieuchitamung",
+            path: "/dasboard/quanlythuchi/phieuchitamung",
             component: Payment,
+          },
+          {
+            name: "Yêu Cầu Thanh Toán",
+            path: "/dasboard/quanlythuchi/yeucauthanhtoan",
+            component: PaymentRequest,
+          },
+          {
+            name: "Duyệt Thanh Toán Của Khách Hàng",
+            path: "/dasboard/quanlythuchi/duyethanhtoan",
+            component: DuyetThanhToan,
+          },
+          {
+            name: "Tra Cứu Dữ Liệu",
+            path: "/dasboard/quanlythuchi/tracuudulieu",
+            component: FindData,
+          },
+          {
+            name: "Chi Phí Cược Tàu/Cont",
+            path: "/dasboard/quanlythuchi/chiphitaucont",
+            component: BoatCont,
           },
         ],
       },
       {
         name: "Quản Lý Hồ Sơ",
-        path: "/dasboard/quanlythuchi",
+        path: "/dasboard/quanlyhoso",
         component: ManageFilePage,
         routes: [
           {
             name: "Tạo Phiếu Theo Dõi",
-            path: "/dasboard/quanlythuchi/taophieutheodoi",
+            path: "/dasboard/quanlyhoso/taophieutheodoi",
             component: CreateFollow,
           },
           {
             name: "Tạo Job Order",
-            path: "/dasboard/quanlythuchi/taojoborder",
+            path: "/dasboard/quanlyhoso/taojoborder",
             component: CreateJobOrder,
           },
           {
             name: "Tạo Job Book Tàu",
-            path: "/dasboard/quanlythuchi/taojobbooktau",
+            path: "/dasboard/quanlyhoso/taojobbooktau",
             component: CreateJobBoat,
           },
           {
             name: "Duyệt Job Order",
-            path: "/dasboard/quanlythuchi/duyetjoborder",
+            path: "/dasboard/quanlyhoso/duyetjoborder",
             component: Pending,
+          },
+          {
+            name: "Báo Biểu Hồ Sơ",
+            path: "/dasboard/quanlyhoso/baobieuhoso",
+            component: PrintManager,
           },
         ],
       },

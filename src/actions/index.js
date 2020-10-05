@@ -44,6 +44,20 @@ const {
   ADD_PAYMENT,
   EMPTY_ITEM_JOB_PAYMENT,
   EDIT_PAYMENT,
+  PAYMENT_DEBIT,
+  DEBIT_NOTE_NOT_CREATE,
+  DETAIL_DEBIT_NOTE_NOT_CREATE,
+  ADD_PAYMENT_DEBIT,
+  DETAIL_DEBIT_NOTE,
+  DELETE_PAYMENT,
+  LIST_PEDING_KH,
+  LIST_PAID_KH,
+  LIST_JOBS_OF_CUSTOMER,
+  INFORMATION_USER,
+  APPROVE_KH,
+  BOAT,
+  CONT,
+  DES_BOAT_CONT,
 } = require("./actionTypes");
 
 //Cusomter
@@ -330,6 +344,30 @@ export const actSearchAllRequest = (type, keyword) => {
   };
 };
 
+export const actSearchAll2Request = (type, keyword) => {
+  return (dispatch) => {
+    return api(
+      `payment/lender/search/type=${type}&value=${keyword}`,
+      "GET",
+      null
+    ).then((res) => {
+      dispatch(actSearchAll(res.data.data));
+    });
+  };
+};
+
+export const actSearchAllDebitRequest = (type, keyword) => {
+  return (dispatch) => {
+    return api(
+      `payment/debit-note/search/type=${type}&value=${keyword}`,
+      "GET",
+      null
+    ).then((res) => {
+      dispatch(actSearchAll(res.data.data));
+    });
+  };
+};
+
 export const actOpenDrawer = () => {
   return {
     type: OPEN_DRAWER,
@@ -379,7 +417,7 @@ export const actGetPayment = (itemPayment) => {
 export const actGetPaymentRequeset = (LENDER_NO) => {
   return (dispatch) => {
     return api(`payment/lender/des/${LENDER_NO}`, "GET", null).then((res) => {
-      dispatch(actGetPayment(res.data.data));
+      dispatch(actGetPayment(res.data));
     });
   };
 };
@@ -412,6 +450,24 @@ export const actEditPaymentRequest = (payment) => {
     return api("payment/lender/edit", "POST", payment).then((res) => {
       dispatch(actEditPayment(res.data.data));
       openNotificationWithIcon("success", "Thành công", "Cập nhật thành công");
+    });
+  };
+};
+
+export const actDeletePayment = (payment) => {
+  return {
+    type: DELETE_PAYMENT,
+    payment,
+  };
+};
+
+export const actDeletePaymentRequest = (payment) => {
+  var form = new FormData();
+  form.append("LENDER_NO", payment);
+  return (dispatch) => {
+    return api("payment/lender/remove", "POST", form).then((res) => {
+      dispatch(actDeletePayment(payment));
+      openNotificationWithIcon("success", "Thành công", "Xóa thành công");
     });
   };
 };
@@ -611,7 +667,6 @@ export const actApproved = (job_no) => {
 export const actApprovedRequest = (JOB_NO) => {
   return (dispatch) => {
     return api("file/approved", "POST", JOB_NO).then((res) => {
-      console.log(res);
       dispatch(actApproved(res.data.data));
       openNotificationWithIcon("success", "Thành công", "Cập nhật thành công");
     });
@@ -621,5 +676,218 @@ export const actApprovedRequest = (JOB_NO) => {
 export const actEmptyItemDetailJob = () => {
   return {
     type: EMPTY_ITEM_JOB_PAYMENT,
+  };
+};
+
+export const actPaymentDebit = (paymentDebit) => {
+  return {
+    type: PAYMENT_DEBIT,
+    paymentDebit,
+  };
+};
+
+export const actGetPaymentDebitRequest = () => {
+  return (dispatch) => {
+    return api("payment/debit-note", "GET", null).then((res) => {
+      dispatch(actPaymentDebit(res.data.data));
+    });
+  };
+};
+
+export const actDebitNoteNoteCreate = (debitNote) => {
+  return { type: DEBIT_NOTE_NOT_CREATE, debitNote };
+};
+
+export const actDebitNoteNoteCreateRequest = () => {
+  return (dispatch) => {
+    return api("payment/debit-note/not-created", "GET", null).then((res) => {
+      dispatch(actDebitNoteNoteCreate(res.data.data));
+    });
+  };
+};
+
+export const actGetDebitNotCreate = (itemJob) => {
+  return {
+    type: DETAIL_DEBIT_NOTE_NOT_CREATE,
+    itemJob,
+  };
+};
+
+export const actGetDebitNotCreateRequest = (JOB_NO) => {
+  return (dispatch) => {
+    return api(
+      `payment/debit-note/des-job-not-created/${JOB_NO}`,
+      "GET",
+      null
+    ).then((res) => {
+      dispatch(actGetDebitNotCreate(res.data.data));
+    });
+  };
+};
+
+export const atctAddPaymentDebit = (paymentDebit) => {
+  return {
+    type: ADD_PAYMENT_DEBIT,
+    paymentDebit,
+  };
+};
+
+export const atctAddPaymentDebitRequest = (paymentDebit) => {
+  return (dispatch) => {
+    return api("payment/debit-note/add", "POST", paymentDebit).then((res) => {
+      dispatch(atctAddPaymentDebit(res.data.data));
+      openNotificationWithIcon("success", "Thành công", "Tạo thành công");
+    });
+  };
+};
+
+export const actGetDebitDes = (itemJob) => {
+  return {
+    type: DETAIL_DEBIT_NOTE,
+    itemJob,
+  };
+};
+
+export const actGetDebitDesRequest = (JOB_NO) => {
+  return (dispatch) => {
+    return api(`payment/debit-note/des/${JOB_NO}`, "GET", null).then((res) => {
+      dispatch(actGetDebitDes(res.data));
+    });
+  };
+};
+
+export const actListPendingKH = (listPendingKH) => {
+  return {
+    type: LIST_PEDING_KH,
+    listPendingKH,
+  };
+};
+
+export const actListPendingKHRequest = () => {
+  return (dispatch) => {
+    return api("payment/paid-debit/list-pending", "GET", null).then((res) => {
+      dispatch(actListPendingKH(res.data.data));
+    });
+  };
+};
+
+export const actListPaidKH = (listPaidKH) => {
+  return {
+    type: LIST_PAID_KH,
+    listPaidKH,
+  };
+};
+
+export const actListPaidKHRequest = () => {
+  return (dispatch) => {
+    return api("payment/paid-debit/list-paid", "GET", null).then((res) => {
+      dispatch(actListPaidKH(res.data.data));
+    });
+  };
+};
+
+export const actListJobsOfCustomer = (list) => {
+  return {
+    type: LIST_JOBS_OF_CUSTOMER,
+    list,
+  };
+};
+
+export const actactListJobsOfCustomerRequest = (CUST_NO) => {
+  return (dispatch) => {
+    return api(`print/file/job-order/custno=${CUST_NO}`, "GET", null).then(
+      (res) => {
+        dispatch(actListJobsOfCustomer(res.data.job_m));
+      }
+    );
+  };
+};
+
+export const fetchInformationUser = (users) => {
+  return {
+    type: INFORMATION_USER,
+    users,
+  };
+};
+
+export const actFetchInformationUser = () => {
+  return (dispatch) => {
+    return api("system/user", "GET", null).then((res) => {
+      dispatch(fetchInformationUser(res.data.data));
+    });
+  };
+};
+
+export const actListApprovedKH = (listApproved) => {
+  return {
+    type: APPROVE_KH,
+    listApproved,
+  };
+};
+
+export const actListApprovedKHRequest = (values) => {
+  var form = new FormData();
+  form.append("JOB_NO", values);
+  form.append("TYPE", "1");
+  return (dispatch) => {
+    return api("payment/paid-debit/change", "POST", form).then((res) => {
+      dispatch(actListApprovedKH(values));
+      openNotificationWithIcon(
+        "success",
+        "Thành công",
+        `Job No: ${values} đã được duyệt thành công.`
+      );
+    });
+  };
+};
+
+export const actListBoat = (list) => {
+  return {
+    type: BOAT,
+    list,
+  };
+};
+
+export const actListBoatRequest = () => {
+  return (dispatch) => {
+    return api(`payment/boat-fee/list-boat-month-m`, "GET", null).then(
+      (res) => {
+        dispatch(actListBoat(res.data.data));
+      }
+    );
+  };
+};
+
+export const actListCont = (list) => {
+  return {
+    type: CONT,
+    list,
+  };
+};
+
+export const actListContRequest = () => {
+  return (dispatch) => {
+    return api(`payment/boat-fee/list-fee-month-m`, "GET", null).then((res) => {
+      dispatch(actListCont(res.data.data));
+    });
+  };
+};
+
+export const actDesBoatCont = (des) => {
+  return {
+    type: DES_BOAT_CONT,
+    des,
+  };
+};
+
+export const actDesBoatContRequest = (type, value) => {
+  return (dispatch) => {
+    return api(
+      `payment/boat-fee/des-month/type=${type}&value=${value}`,
+      "GET",
+      null
+    ).then((res) => {
+      dispatch(actDesBoatCont(res.data.data));
+    });
   };
 };

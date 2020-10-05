@@ -183,6 +183,7 @@ const ModalEdit = (props) => {
   };
 
   const onFinish2 = (values) => {
+    console.log(values)
     const form = new FormData();
     var item = values.data[newIndex];
     form.append("TYPE", "JOB_ORDER");
@@ -192,7 +193,7 @@ const ModalEdit = (props) => {
     form.append("REV_TYPE", "N");
     form.append("INV_NO", "");
     form.append("PORT_AMT", item.PORT_AMT);
-    form.append("INDUSTRY_ZONE_AMT", item.INDUSTRY_ZONE_AMT);
+    form.append("INDUSTRY_ZONE_AMT", item.INDUSTRY_ZONE_AMT ? item.INDUSTRY_ZONE_AMT : '0');
     form.append("NOTE", item.NOTE);
     form.append("THANH_TOAN_MK", item.THANH_TOAN_MK ? item.THANH_TOAN_MK : "N");
     form.append("BRANCH_ID", localStorage.getItem("BRANCH_ID"));
@@ -205,7 +206,7 @@ const ModalEdit = (props) => {
       );
     } else {
       form.append("INPUT_USER", localStorage.getItem("USER_NO"));
-      api("file/job-order/add-d", "POST", form).then((res) => {
+      api("file/job-order/add-d", "POST", form).then((res) => {        
         openNotificationWithIcon(
           "success",
           "Thành công",
@@ -473,8 +474,7 @@ const ModalEdit = (props) => {
                       {...field}
                       name={[field.name, "INPUT_USER"]}
                       fieldKey={[field.key, "INPUT_USER"]}
-                      style={{ width: "70px" }}
-                      initialValue={localStorage.getItem("USER_NO")}
+                      style={{ width: "70px" }}                      
                     >
                       <Input placeholder="Người Nhập" disabled />
                     </Form.Item>

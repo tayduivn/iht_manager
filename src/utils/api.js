@@ -17,6 +17,7 @@ const api = (endpoint, method = "GET", body) => {
     url: URL + endpoint,
     data: body,
   }).catch((err) => {
+    console.log(err)
     openNotificationWithIcon("warning");
   });
 };

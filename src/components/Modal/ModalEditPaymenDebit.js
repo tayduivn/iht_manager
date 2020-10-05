@@ -17,6 +17,7 @@ import {
   actCloseModal,
   actFetchAgentsRequest,
   actFetchCarriersRequest,
+  actFetchCostsRequest,
 } from "../../actions";
 import { convertDateTime, openNotificationWithIcon } from "../../utils/help";
 import api from "../../utils/api";
@@ -28,7 +29,7 @@ import {
 
 const { Option } = Select;
 
-const ModalEditBoat = (props) => {
+const ModalEditPaymentDebit = (props) => {
   const dispatch = useDispatch();
   const closeModal = () => dispatch(actCloseModal());
   const stateModal = useSelector((state) => state.isDrawer);
@@ -36,20 +37,23 @@ const ModalEditBoat = (props) => {
   const getAgent = () => dispatch(actFetchAgentsRequest());
   const carriers = useSelector((state) => state.carriers);
   const agents = useSelector((state) => state.agents);
+  const costs = useSelector((state) => state.costs);
+  const fetchCosts = () => dispatch(actFetchCostsRequest());
 
   useEffect(() => {
     getCarrier();
     getAgent();
+    fetchCosts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  var itemJob = props.itemJob.data === undefined ? "" : props.itemJob.data;
-
+  var itemJob =
+    props.itemJob.debit_note_m === undefined ? "" : props.itemJob.debit_note_m;
   const fields = [
     { name: "JOB_NO", value: itemJob.JOB_NO },
     {
-      name: "JOB_DATE",
-      value: itemJob.JOB_DATE ? itemJob.JOB_DATE : itemJob.ORDER_DATE,
+      name: "DEBIT_DATE",
+      value: itemJob.DEBIT_DATE,
     },
     {
       name: "CUSTOMS_NO",
@@ -64,12 +68,12 @@ const ModalEditBoat = (props) => {
       value: itemJob.BILL_NO,
     },
     {
-      name: "ORDER_FROM",
-      value: itemJob.ORDER_FROM,
+      name: "TRANS_FROM",
+      value: itemJob.TRANS_FROM,
     },
     {
-      name: "ORDER_TO",
-      value: itemJob.ORDER_TO,
+      name: "TRANS_TO",
+      value: itemJob.TRANS_TO,
     },
     {
       name: "CUST_NO",
@@ -128,8 +132,8 @@ const ModalEditBoat = (props) => {
       value: itemJob.PO_NO,
     },
     {
-      name: "APPROVE",
-      value: itemJob.CHK_MK === "Y" ? true : false,
+      name: "PAYMENT_CHK",
+      value: itemJob.PAYMENT_CHK === "Y" ? true : false,
     },
     {
       name: "CUST_NO2",
@@ -139,16 +143,20 @@ const ModalEditBoat = (props) => {
       name: "CUST_NO3",
       value: itemJob.CUST_NO3,
     },
+    {
+      name: "PAYMENT_DATE",
+      value: convertDateTime(itemJob.PAYMENT_DATE),
+    },
   ];
 
   const onFinish = (values) => {
     const form = new FormData();
-    form.append("TYPE", "JOB_ORDER");
     form.append("JOB_NO", values.JOB_NO);
     form.append("CONSIGNEE", values.CONSIGNEE);
     form.append("SHIPPER", values.SHIPPER);
-    form.append("ORDER_TO", values.ORDER_TO);
-    form.append("CONTAINER_NO", values.CONTAINER_NO);
+    form.append("TRANS_FROM", values.TRANS_FROM);
+    form.append("TRANS_TO", values.TRANS_TO);
+    form.append("ORDER_NO", "");
     form.append("CONTAINER_QTY", values.CONTAINER_QTY);
     form.append("CUSTOMS_NO", values.CUSTOMS_NO);
     form.append("CUSTOMS_DATE", values.CUSTOMS_DATE);
@@ -161,11 +169,13 @@ const ModalEditBoat = (props) => {
     form.append("PO_NO", values.PO_NO);
     form.append("INVOICE_NO", values.INVOICE_NO);
     form.append("NOTE", values.NOTE);
+    form.append("CONTAINER_NO", values.CONTAINER_NO);
     form.append("MODIFY_USER", localStorage.getItem("USER_NO"));
-    form.append("BRANCH_ID", localStorage.getItem("BRANCH_ID"));
     form.append("CUST_NO2", values.CUST_NO2);
     form.append("CUST_NO3", values.CUST_NO3);
-    api("file/job-order/edit", "POST", form).then((res) =>
+    form.append("CUST_NO4", values.CUST_NO4);
+    form.append("CUST_NO5", values.CUST_NO5);
+    api("payment/debit-note/edit", "POST", form).then((res) =>
       openNotificationWithIcon("success", "Thành công", "Cập nhật thành công")
     );
   };
@@ -179,24 +189,40 @@ const ModalEditBoat = (props) => {
 
   const onThueChange = (value, index) => {
     var data = form.getFieldValue("data");
+    var dor_amt = form.getFieldValue("data")[index].DOR_AMT
+      ? form.getFieldValue("data")[index].DOR_AMT
+      : 0;
+    var dor_rate = form.getFieldValue("data")[index].DOR_RATE
+      ? form.getFieldValue("data")[index].DOR_RATE
+      : 0;
+    var qty = form.getFieldValue("data")[index].QUANTITY
+      ? form.getFieldValue("data")[index].QUANTITY
+      : 0;
+
     var price = form.getFieldValue("data")[index].PRICE
       ? form.getFieldValue("data")[index].PRICE
       : 0;
-    var tax_note = form.getFieldValue("data")[index].TAX_NOTE
-      ? form.getFieldValue("data")[index].TAX_NOTE
-      : 0;
-    var sl = form.getFieldValue("data")[index].QTY
-      ? form.getFieldValue("data")[index].QTY
-      : 0;
-    var sau_thue = price + (price * tax_note) / 100;
-    var tong_tien = sau_thue * sl;
-    var thue = ((price * tax_note) / 100) * sl;
-    data[index].SAU_THUE = sau_thue;
-    data[index].TONG_TIEN = tong_tien;
-    data[index].TAX_AMT = thue;
+    var tax_note = form.getFieldValue("data")[index].TAX_NOTE;
+    var tax_mount = 0;
+    var amount = 0;
+    var dor_no = form.getFieldValue("data")[index].DOR_NO;
+    if (dor_no === "USD") {
+      price = dor_amt * dor_rate;
+      tax_mount = (price * tax_note) / 100;
+      amount = price * qty + tax_mount;
+      data[index].PRICE = price;
+      data[index].TAX_AMT = tax_mount;
+      data[index].TOTAL_AMT = amount;
+    } else {
+      tax_mount = (price * tax_note) / 100;
+      amount = price * qty + tax_mount;
+      data[index].TAX_AMT = tax_mount;
+      data[index].TOTAL_AMT = amount;
+    }
   };
 
-  var itemJobD = props.itemJob.job_d === undefined ? [] : props.itemJob.job_d;
+  var itemJobD =
+    props.itemJob.debit_note_d === undefined ? [] : props.itemJob.debit_note_d;
 
   const fields2 = [{ name: "data", value: [...itemJobD] }];
 
@@ -210,31 +236,34 @@ const ModalEditBoat = (props) => {
   const onFinish2 = (values) => {
     const form = new FormData();
     var item = values.data[newIndex];
-    form.append("TYPE", "JOB_ORDER_BOAT");
-    form.append("JOB_NO", itemJob.JOB_NO);
-    form.append("ORDER_TYPE", item.ORDER_TYPE);
+    form.append("JOB_NO", itemJob.JOB_NO); //
+    form.append("INV_NO", itemJob.INV_NO); //
+    form.append("INV_YN", "N");
+    form.append("CUSTOM_NO", "");
     form.append("DESCRIPTION", item.DESCRIPTION);
-    form.append("REV_TYPE", "N");
+    form.append("CUSTOM_NO", "");
     form.append("UNIT", item.UNIT);
-    form.append("QTY", item.QTY);
+    form.append("QUANTITY", item.QUANTITY);
     form.append("PRICE", item.PRICE);
     form.append("TAX_NOTE", item.TAX_NOTE);
     form.append("TAX_AMT", item.TAX_AMT);
-    form.append("NOTE", item.NOTE);
-    form.append("THANH_TOAN_MK", item.THANH_TOAN_MK ? item.THANH_TOAN_MK : "N");
+    form.append("TOTAL_AMT", item.TOTAL_AMT);
+    form.append("NOTE", "");
+    form.append("DOR_NO", item.DOR_NO);
+    form.append("DOR_AMT", item.DOR_AMT);
+    form.append("DOR_RATE", item.DOR_RATE);
+    form.append("DEB_TYPE", item.DEB_TYPE);
     form.append("BRANCH_ID", localStorage.getItem("BRANCH_ID"));
     if (item.INPUT_USER) {
       form.append("INPUT_USER", item.INPUT_USER);
-      form.append("SER_NO", item.SER_NO);
+      form.append("SER_NO", item.SER_NO); //
       form.append("MODIFY_USER", localStorage.getItem("USER_NO"));
-      api("file/job-order/edit-d", "POST", form).then((res) =>
-
+      api("payment/debit-note/edit-d", "POST", form).then((res) =>
         openNotificationWithIcon("success", "Thành công", "Cập nhật thành công")
       );
     } else {
       form.append("INPUT_USER", localStorage.getItem("USER_NO"));
-      api("file/job-order/add-d", "POST", form).then((res) => {
- 
+      api("payment/debit-note/add-d", "POST", form).then((res) => {
         openNotificationWithIcon(
           "success",
           "Thành công",
@@ -265,18 +294,22 @@ const ModalEditBoat = (props) => {
             </Form.Item>
           </Col>
           <Col span={6}>
-            <Form.Item label="Order Date" name="JOB_DATE">
+            <Form.Item label="Debit Date" name="DEBIT_DATE">
               <Input disabled />
             </Form.Item>
           </Col>
           <Col span={2}>
-            <Form.Item label="Duyệt" name="APPROVE" valuePropName="checked">
+            <Form.Item
+              label="Paid Mk"
+              name="PAYMENT_CHK"
+              valuePropName="checked"
+            >
               <Checkbox disabled />
             </Form.Item>
           </Col>
           <Col span={6}>
-            <Form.Item label="Approve Date" name="CHK_DATE">
-              <Input disabled />
+            <Form.Item label="Payment Date" name="PAYMENT_DATE">
+              <Input />
             </Form.Item>
           </Col>
           <Col span={4} style={{ textAlign: "right" }}>
@@ -362,12 +395,12 @@ const ModalEditBoat = (props) => {
         </Row>
         <Row gutter={24}>
           <Col span={8}>
-            <Form.Item label="Order From" name="ORDER_FROM">
+            <Form.Item label="Order From" name="TRANS_FROM">
               <Input />
             </Form.Item>
           </Col>
           <Col span={8}>
-            <Form.Item label="Order To" name="ORDER_TO">
+            <Form.Item label="Order To" name="TRANS_TO">
               <Input />
             </Form.Item>
           </Col>
@@ -451,78 +484,67 @@ const ModalEditBoat = (props) => {
         <Form.List name="data">
           {(fields, { add, remove }) => {
             return (
-              <div>
+              <div style={{ overflowX: "scroll" }}>
                 {fields.map((field, index) => (
                   <Space
                     key={field.key}
-                    style={{ display: "flex", marginBottom: 8 }}
+                    style={{ marginBottom: 8, width: "2000px" }}
                     align="start"
                   >
                     <Form.Item
                       {...field}
-                      name={[field.name, "ORDER_TYPE"]}
-                      fieldKey={[field.key, "ORDER_TYPE"]}
+                      name={[field.name, "DEB_TYPE"]}
+                      fieldKey={[field.key, "DEB_TYPE"]}
                     >
                       <Select placeholder="Loại" style={{ width: 150 }}>
                         <Option key={"I"}>Our Company Pay</Option>
                         <Option key={"O"}>Pay In Advance</Option>
-                        <Option key={"T"}>Trucking Fee</Option>
-                        <Option key={"C"}>Cược Cont</Option>
-                        <Option key={"8"}>Cược Sửa Chữa Cont</Option>
-                        <Option key={"6"}>Refund Khách Hàng</Option>
-                        <Option key={"5"}>Refund Hãng Tàu</Option>
-                        <Option key={"7"}>Refund Đại Lý</Option>
                       </Select>
+                    </Form.Item>
+                    <Form.Item
+                      {...field}
+                      name={[field.name, "INV_NO"]}
+                      fieldKey={[field.key, "INV_NO"]}
+                    >
+                      <Input placeholder="Invoice No" />
                     </Form.Item>
                     <Form.Item
                       {...field}
                       name={[field.name, "DESCRIPTION"]}
                       fieldKey={[field.key, "DESCRIPTION"]}
                     >
-                      <Input placeholder="Description" />
-                    </Form.Item>
-                    <Form.Item
-                      {...field}
-                      name={[field.name, "UNIT"]}
-                      fieldKey={[field.key, "UNIT"]}
-                    >
-                      <Input placeholder="ĐVT" />
-                    </Form.Item>
-                    <Form.Item
-                      {...field}
-                      name={[field.name, "QTY"]}
-                      fieldKey={[field.key, "QTY"]}
-                      onChange={(e) => onThueChange(e, index)}                                           
-                    >
-                      <InputNumber placeholder="SL" />
-                    </Form.Item>
-                    <Form.Item
-                      {...field}
-                      name={[field.name, "PRICE"]}
-                      fieldKey={[field.key, "PRICE"]}
-                    >
-                      <InputNumber
-                        formatter={(value) =>
-                          `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                      <Select
+                        placeholder="Chọn"
+                        showSearch
+                        optionFilterProp="children"
+                        filterOption={(input, option) =>
+                          option.children
+                            .toLowerCase()
+                            .indexOf(input.toLowerCase()) >= 0
                         }
-                        parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
-                        placeholder="Giá Trước Thuế"
-                        onChange={(e) => onThueChange(e, index)}
-                      />
+                        style={{ width: 300 }}
+                      >
+                        {costs.map((item, index) => {
+                          return (
+                            <Option
+                              key={item.DESCRIPTION_CODE}
+                              value={item.DESCRIPTION_CODE}
+                            >
+                              {`${item.DESCRIPTION_NAME_CN} | ${item.DESCRIPTION_NAME_VN}`}
+                            </Option>
+                          );
+                        })}
+                      </Select>
                     </Form.Item>
                     <Form.Item
                       {...field}
-                      name={[field.name, "TAX_NOTE"]}
-                      fieldKey={[field.key, "TAX_NOTE"]}
+                      name={[field.name, "DOR_NO"]}
+                      fieldKey={[field.key, "DOR_NO"]}
                     >
-                      <InputNumber
-                        formatter={(value) =>
-                          `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                        }
-                        parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
-                        placeholder="Thuế"
-                        onChange={(e) => onThueChange(e, index)}
-                      />
+                      <Select placeholder="Currency">
+                        <Option key={"VND"}>VND</Option>
+                        <Option key={"USD"}>USD</Option>
+                      </Select>
                     </Form.Item>
                     <Form.Item
                       noStyle
@@ -534,8 +556,8 @@ const ModalEditBoat = (props) => {
                         getFieldValue("data")[index] ? (
                           <Form.Item
                             {...field}
-                            name={[field.name, "SAU_THUE"]}
-                            fieldKey={[field.key, "SAU_THUE"]}
+                            name={[field.name, "DOR_AMT"]}
+                            fieldKey={[field.key, "DOR_AMT"]}
                           >
                             <InputNumber
                               formatter={(value) =>
@@ -544,53 +566,28 @@ const ModalEditBoat = (props) => {
                               parser={(value) =>
                                 value.replace(/\$\s?|(,*)/g, "")
                               }
-                              placeholder="Giá Sau Thuế"
+                              placeholder="Price"
+                              onChange={(e) => onThueChange(e, index)}
+                              style={{ width: 150, color: "red" }}
+                            />
+                          </Form.Item>
+                        ) : (
+                          <Form.Item
+                            {...field}
+                            name={[field.name, "DOR_AMT"]}
+                            fieldKey={[field.key, "DOR_AMT"]}
+                          >
+                            <InputNumber
+                              formatter={(value) =>
+                                `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                              }
+                              parser={(value) =>
+                                value.replace(/\$\s?|(,*)/g, "")
+                              }
+                              placeholder="Price"
+                              style={{ width: 150, color: "red" }}
                               disabled
-                              style={{ color: "red" }}
                             />
-                          </Form.Item>
-                        ) : (
-                          <Form.Item
-                            {...field}
-                            name={[field.name, "SAU_THUE"]}
-                            fieldKey={[field.key, "SAU_THUE"]}
-                          >
-                            <InputNumber placeholder="Giá Sau Thuế" />
-                          </Form.Item>
-                        )
-                      }
-                    </Form.Item>
-                    <Form.Item
-                      noStyle
-                      shouldUpdate={(prevValues, currentValues) =>
-                        prevValues.data !== currentValues.data
-                      }
-                    >
-                      {({ getFieldValue }) =>
-                        getFieldValue("data")[index] ? (
-                          <Form.Item
-                            {...field}
-                            name={[field.name, "TAX_AMT"]}
-                            fieldKey={[field.key, "TAX_AMT"]}
-                          >
-                            <InputNumber
-                              formatter={(value) =>
-                                `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                              }
-                              parser={(value) =>
-                                value.replace(/\$\s?|(,*)/g, "")
-                              }
-                              placeholder="Tiền Thuế"
-                              style={{ color: "red" }}
-                            />
-                          </Form.Item>
-                        ) : (
-                          <Form.Item
-                            {...field}
-                            name={[field.name, "TAX_AMT"]}
-                            fieldKey={[field.key, "TAX_AMT"]}
-                          >
-                            <InputNumber placeholder="Tiền Thuế" disabled />
                           </Form.Item>
                         )
                       }
@@ -606,8 +603,8 @@ const ModalEditBoat = (props) => {
                         getFieldValue("data")[index] ? (
                           <Form.Item
                             {...field}
-                            name={[field.name, "TONG_TIEN"]}
-                            fieldKey={[field.key, "TONG_TIEN"]}
+                            name={[field.name, "DOR_RATE"]}
+                            fieldKey={[field.key, "DOR_RATE"]}
                           >
                             <InputNumber
                               formatter={(value) =>
@@ -616,29 +613,200 @@ const ModalEditBoat = (props) => {
                               parser={(value) =>
                                 value.replace(/\$\s?|(,*)/g, "")
                               }
-                              placeholder="Tổng Tiền"
-                              disabled
+                              placeholder="Rate"
+                              onChange={(e) => onThueChange(e, index)}
                               style={{ color: "red" }}
                             />
                           </Form.Item>
                         ) : (
                           <Form.Item
                             {...field}
-                            name={[field.name, "TONG_TIEN"]}
-                            fieldKey={[field.key, "TONG_TIEN"]}
+                            name={[field.name, "DOR_RATE"]}
+                            fieldKey={[field.key, "DOR_RATE"]}
                           >
-                            <InputNumber disabled style={{ color: "red" }} />
+                            <InputNumber
+                              formatter={(value) =>
+                                `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                              }
+                              parser={(value) =>
+                                value.replace(/\$\s?|(,*)/g, "")
+                              }
+                              placeholder="Rate"
+                              disabled
+                              style={{ color: "red" }}
+                            />
+                          </Form.Item>
+                        )
+                      }
+                    </Form.Item>
+
+                    <Form.Item
+                      {...field}
+                      name={[field.name, "QUANTITY"]}
+                      fieldKey={[field.key, "QUANTITY"]}
+                    >
+                      <InputNumber
+                        formatter={(value) =>
+                          `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                        }
+                        parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
+                        placeholder="QTY"
+                        onChange={(e) => onThueChange(e, index)}
+                      />
+                    </Form.Item>
+                    <Form.Item
+                      noStyle
+                      shouldUpdate={(prevValues, currentValues) =>
+                        prevValues.data !== currentValues.data
+                      }
+                    >
+                      {({ getFieldValue }) =>
+                        getFieldValue("data")[index] ? (
+                          <Form.Item
+                            {...field}
+                            name={[field.name, "PRICE"]}
+                            fieldKey={[field.key, "PRICE"]}
+                          >
+                            <InputNumber
+                              formatter={(value) =>
+                                `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                              }
+                              parser={(value) =>
+                                value.replace(/\$\s?|(,*)/g, "")
+                              }
+                              placeholder="Price (VND)"
+                              onChange={(e) => onThueChange(e, index)}
+                              style={{ width: 100 }}
+                            />
+                          </Form.Item>
+                        ) : (
+                          <Form.Item
+                            {...field}
+                            name={[field.name, "PRICE"]}
+                            fieldKey={[field.key, "PRICE"]}
+                          >
+                            <InputNumber
+                              formatter={(value) =>
+                                `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                              }
+                              parser={(value) =>
+                                value.replace(/\$\s?|(,*)/g, "")
+                              }
+                              placeholder="Price (VND)"
+                              onChange={(e) => onThueChange(e, index)}
+                              style={{ width: 100 }}
+                            />
                           </Form.Item>
                         )
                       }
                     </Form.Item>
                     <Form.Item
                       {...field}
-                      name={[field.name, "NOTE"]}
-                      fieldKey={[field.key, "NOTE"]}
+                      name={[field.name, "TAX_NOTE"]}
+                      fieldKey={[field.key, "TAX_NOTE"]}
+                      initialValue={"0"}
                     >
-                      <Input placeholder="Ghi Chú" />
+                      <Select
+                        placeholder="Tax"
+                        onChange={(e) => onThueChange(e, index)}
+                      >
+                        <Option key={"0"}>0</Option>
+                        <Option key={"10"}>10</Option>
+                      </Select>
                     </Form.Item>
+                    <Form.Item
+                      noStyle
+                      shouldUpdate={(prevValues, currentValues) =>
+                        prevValues.data !== currentValues.data
+                      }
+                    >
+                      {({ getFieldValue }) =>
+                        getFieldValue("data")[index] ? (
+                          <Form.Item
+                            {...field}
+                            name={[field.name, "TAX_AMT"]}
+                            fieldKey={[field.key, "TAX_AMT"]}
+                          >
+                            <InputNumber
+                              formatter={(value) =>
+                                `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                              }
+                              parser={(value) =>
+                                value.replace(/\$\s?|(,*)/g, "")
+                              }
+                              disabled
+                              placeholder="Tax Amount"
+                              style={{ color: "red" }}
+                            />
+                          </Form.Item>
+                        ) : (
+                          <Form.Item
+                            {...field}
+                            name={[field.name, "TAX_AMT"]}
+                            fieldKey={[field.key, "TAX_AMT"]}
+                          >
+                            <InputNumber
+                              formatter={(value) =>
+                                `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                              }
+                              parser={(value) =>
+                                value.replace(/\$\s?|(,*)/g, "")
+                              }
+                              disabled
+                              placeholder="Tax Amount"
+                              style={{ color: "red" }}
+                            />
+                          </Form.Item>
+                        )
+                      }
+                    </Form.Item>
+                    <Form.Item
+                      noStyle
+                      shouldUpdate={(prevValues, currentValues) =>
+                        prevValues.data !== currentValues.data
+                      }
+                    >
+                      {({ getFieldValue }) =>
+                        getFieldValue("data")[index] ? (
+                          <Form.Item
+                            {...field}
+                            name={[field.name, "TOTAL_AMT"]}
+                            fieldKey={[field.key, "TOTAL_AMT"]}
+                          >
+                            <InputNumber
+                              placeholder="Amount"
+                              formatter={(value) =>
+                                `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                              }
+                              parser={(value) =>
+                                value.replace(/\$\s?|(,*)/g, "")
+                              }
+                              style={{ color: "red" }}
+                              disabled
+                            />
+                          </Form.Item>
+                        ) : (
+                          <Form.Item
+                            {...field}
+                            name={[field.name, "TOTAL_AMT"]}
+                            fieldKey={[field.key, "TOTAL_AMT"]}
+                          >
+                            <InputNumber
+                              placeholder="Amount"
+                              formatter={(value) =>
+                                `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                              }
+                              parser={(value) =>
+                                value.replace(/\$\s?|(,*)/g, "")
+                              }
+                              style={{ color: "red" }}
+                              disabled
+                            />
+                          </Form.Item>
+                        )
+                      }
+                    </Form.Item>
+
                     <Form.Item
                       {...field}
                       name={[field.name, "SER_NO"]}
@@ -646,16 +814,6 @@ const ModalEditBoat = (props) => {
                       hidden
                     >
                       <Input disabled />
-                    </Form.Item>
-                    <Form.Item
-                      {...field}
-                      name={[field.name, "THANH_TOAN_MK"]}
-                      fieldKey={[field.key, "THANH_TOAN_MK"]}
-                    >
-                      <Select placeholder="Loại" style={{ width: 150 }}>
-                        <Option key={"Y"}>Approved</Option>
-                        <Option key={"N"}>Pending</Option>
-                      </Select>
                     </Form.Item>
                     <Form.Item
                       {...field}
@@ -728,4 +886,4 @@ const ModalEditBoat = (props) => {
   );
 };
 
-export default ModalEditBoat;
+export default ModalEditPaymentDebit;

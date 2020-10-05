@@ -16,6 +16,12 @@ import joborder from "./joborder";
 import listPending from "./listPending";
 import listApproved from "./listApproved";
 import itemJobPayment from "./itemJobPayment";
+import paymentDebit from "./paymentDebit";
+import listPendingKH from "./listPendingKH";
+import listJobOfCustomer from "./listJobOfCustomer";
+import informationUser from "./informationUser";
+import boat from "./boat";
+import itemBoatCont from "./itemBoatCont";
 
 const allReducer = combineReducers({
   customers,
@@ -34,7 +40,13 @@ const allReducer = combineReducers({
   joborder,
   listPending,
   listApproved,
-  itemJobPayment
+  itemJobPayment,
+  paymentDebit,
+  listJobOfCustomer,
+  listPendingKH,
+  informationUser,
+  boat,
+  itemBoatCont
 });
 
 export default allReducer;

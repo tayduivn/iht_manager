@@ -2,7 +2,7 @@ import {
   FETCH_PAYMENTS,
   SEARCH_ALL,
   ADD_PAYMENT,
-  EDIT_PAYMENT,
+  EDIT_PAYMENT, DELETE_PAYMENT
 } from "../actions/actionTypes";
 
 var initialState = [];
@@ -30,6 +30,10 @@ const payments = (state = initialState, action) => {
       index = findIndex(state, action.payment.LENDER_NO);
       state[index] = action.payment;
       return [...state];
+      case DELETE_PAYMENT:
+        index = findIndex(state, action.payment);       
+        state.splice(index, 1)
+        return [...state];
     case SEARCH_ALL:
       state = action.searchs;
       return [...state];

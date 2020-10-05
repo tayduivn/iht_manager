@@ -8,6 +8,7 @@ import {
   actListApprovedRequest,
   actApprovedRequest,
 } from "../../actions";
+import { convertDateTime } from "../../utils/help";
 
 const Approved = () => {
   const listPending = useSelector((state) => state.listPending);
@@ -52,6 +53,7 @@ const Approved = () => {
       title: "Order Date",
       dataIndex: "ORDER_DATE",
       key: "ORDER_DATE",
+      render: (text) => convertDateTime(text),
     },
     {
       title: "Customer No",
