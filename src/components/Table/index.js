@@ -1,10 +1,15 @@
 import React from "react";
-import { Table } from "antd";
+import { Pagination, Spin, Table } from "antd";
 import _ from "lodash";
 import { useSelector } from "react-redux";
 
-const TableCustom = (data, columns) => {
+const TableCustom = (data, columns, totalPage, changePage) => {
   const searchs = useSelector((state) => state.searchReducer);
+  const spin = useSelector((state) => state.isLoading);
+
+  const onChangePage = (page) => {
+    changePage(page)
+  };
 
   if (searchs.kinds === "CUST_NAME") {
     data = _.filter(data, function (o) {
@@ -46,19 +51,27 @@ const TableCustom = (data, columns) => {
         _.toLower(o.LENDER_NAME).indexOf(_.toLower("Chi Truc Tiep")) !== -1
       );
     });
-  }else if (searchs.kinds === "LENDER_NO") {
+  } else if (searchs.kinds === "LENDER_NO") {
     data = _.filter(data, function (o) {
       return _.toLower(o.LENDER_NO).indexOf(_.toLower(searchs.keyword)) !== -1;
     });
   }
 
   return (
-    <Table
-      rowKey={columns[0].key.toString()}
-      dataSource={data}
-      columns={columns}
-      pagination
-    />
+    <Spin size="large" spinning={spin}>
+      <Table
+        rowKey={columns[0].key.toString()}
+        dataSource={data}
+        columns={columns}
+        pagination={false}
+      />
+      <Pagination
+        style={{ marginTop: 10 }}
+        defaultCurrent={1}
+        total={totalPage}
+        onChange={onChangePage}
+      />
+    </Spin>
   );
 };
 

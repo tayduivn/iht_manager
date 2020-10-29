@@ -25,7 +25,6 @@ const ModalPayment = () => {
   const addPayment = (payment) => dispatch(actPaymentRequest(payment));
 
   const onFinish = (values) => {
-    console.log(values);
     const form = new FormData();
     form.append("TOTAL_AMT", "0");
     form.append("CONTAINER_QTY", values.CONTAINER_QTY);

@@ -1,28 +1,47 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import TableCustom from "../../components/Table";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  actFetchStaffsRequest,
   actOpenDrawer,
   actGetStaffRequeset,
   actCloseDrawer,
   actAddStaffRequest,
   actEditStafffRequest,
+  actFetchStaffs,
 } from "../../actions";
 import Search from "../../components/Search";
 import { Space, Button } from "antd";
 import DrawerCustom from "../../components/Drawer";
+import { actShowLoading, actHideLoading } from "../../actions/actionLoading";
+import api from "../../utils/api";
 
 const InformationStaff = () => {
   const staffs = useSelector((state) => state.staffs);
   const itemCustomer = useSelector((state) => state.itemCustomer);
+
+  const [total, setTotal] = useState(1);
+
   const dispatch = useDispatch();
-  const fetchStaff = () => dispatch(actFetchStaffsRequest());
+  const listStaff = (data) => dispatch(actFetchStaffs(data));
   const openDrawer = () => dispatch(actOpenDrawer());
   const getStaff = (PNL_NO) => dispatch(actGetStaffRequeset(PNL_NO));
   const closeDrawer = () => dispatch(actCloseDrawer());
   const addStaff = (staff) => dispatch(actAddStaffRequest(staff));
   const editStaff = (staff) => dispatch(actEditStafffRequest(staff));
+
+  const showLoading = () => dispatch(actShowLoading());
+  const hideLoading = () => dispatch(actHideLoading());
+
+  const fetchStaff = () => {
+    showLoading();
+    api("data-basic/staff-customs/page=1", "GET", null).then((res) => {
+      if (res.status === 200) {
+        listStaff(res.data.data);
+        setTotal(res.data.total_page);
+        hideLoading();
+      }
+    });
+  };
 
   useEffect(() => {
     fetchStaff();
@@ -131,7 +150,6 @@ const InformationStaff = () => {
   ];
 
   const onFinish = (values) => {
-    console.log(values);
     const form = new FormData();
     form.append("PNL_NAME", values.PNL_NAME);
     form.append("PNL_NAME_C", values.PNL_NAME_C);
@@ -151,10 +169,20 @@ const InformationStaff = () => {
     }
   };
 
+  const changePage = (page) => {
+    showLoading();
+    api(`data-basic/staff-customs/page=${page}`, "GET", null).then((res) => {
+      if (res.status === 200) {
+        listStaff(res.data.data);
+        hideLoading();
+      }
+    });
+  };
+
   return (
     <Fragment>
       {Search(searchs)}
-      {TableCustom(staffs, columns)}
+      {TableCustom(staffs, columns,total, changePage)}
       {DrawerCustom(fields, itemCustomer, onFinish)}
     </Fragment>
   );

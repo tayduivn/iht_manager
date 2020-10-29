@@ -1,22 +1,51 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import Search from "../../components/Search";
 import TableCustom from "../../components/Table";
 import { Tabs, Space, Button } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  actListPendingRequest,
   actListApprovedRequest,
   actApprovedRequest,
+  actListPending,
 } from "../../actions";
 import { convertDateTime } from "../../utils/help";
+import api from "../../utils/api";
+import { actShowLoading, actHideLoading } from "../../actions/actionLoading";
 
 const Approved = () => {
+  const [total, setTotal] = useState(0);
+  const [totalApprove, setTotalApprove] = useState(0);
   const listPending = useSelector((state) => state.listPending);
   const listApproved = useSelector((state) => state.listApproved);
   const dispatch = useDispatch();
-  const fetchListPending = () => dispatch(actListPendingRequest());
-  const fetchListApproved = () => dispatch(actListApprovedRequest());
+  const pending = (data) => dispatch(actListPending(data));
+  const lapproved = () => dispatch(actListApprovedRequest());
   const approved = (JOB_NO) => dispatch(actApprovedRequest(JOB_NO));
+
+  const showLoading = () => dispatch(actShowLoading());
+  const hideLoading = () => dispatch(actHideLoading());
+
+  const fetchListPending = () => {
+    showLoading();
+    api("file/approved/list-pending/page=1", "GET", null).then((res) => {
+      if (res.status === 200) {
+        pending(res.data.data);
+        setTotal(res.data.total_page);
+        hideLoading();
+      }
+    });
+  };
+
+  const fetchListApproved = () => {
+    showLoading();
+    api("file/approved/list-approved/page=1", "GET", null).then((res) => {
+      if (res.status === 200) {
+        lapproved(res.data.data);
+        setTotalApprove(res.data.total_page);
+        hideLoading();
+      }
+    });
+  };
 
   useEffect(() => {
     fetchListPending();
@@ -90,32 +119,56 @@ const Approved = () => {
       key: "JOB_NO",
       render: (text, record) => (
         <>
-          <Space size="middle">
-            <Button
-              type="primary"
-              onClick={() => {
-                var form = new FormData();
-                form.append("JOB_NO", record.JOB_NO);
-                approved(form);
-              }}
-            >
-              Duyệt
-            </Button>
-          </Space>
+          {record.CHK_MK === "Y" ? null : (
+            <Space size="middle">
+              <Button
+                type="primary"
+                onClick={() => {
+                  var form = new FormData();
+                  form.append("JOB_NO", record.JOB_NO);
+                  approved(form);
+                }}
+              >
+                Duyệt
+              </Button>
+            </Space>
+          )}
         </>
       ),
     },
   ];
+
+  const changePagePeding = (page) => {
+    showLoading();
+    api(`file/approved/list-pending/page=${page}`, "GET", null).then((res) => {
+      if (res.status === 200) {
+        pending(res.data.data);
+        setTotal(res.data.total_page);
+        hideLoading();
+      }
+    });
+  };
+
+  const changePageApprove = (page) => {
+    showLoading();
+    api(`file/approved/list-approved/page=${page}`, "GET", null).then((res) => {
+      if (res.status === 200) {
+        lapproved(res.data.data);
+        setTotal(res.data.total_page);
+        hideLoading();
+      }
+    });
+  };
 
   return (
     <Fragment>
       {Search(searchs)}
       <Tabs defaultActiveKey="1">
         <Tabs.TabPane tab="Chưa Duyệt" key="1">
-          {TableCustom(listPending, columns)}
+          {TableCustom(listPending, columns, total, changePagePeding)}
         </Tabs.TabPane>
         <Tabs.TabPane tab="Đã Duyệt" key="2">
-          {TableCustom(listApproved, columns)}
+          {TableCustom(listApproved, columns, totalApprove, changePageApprove)}
         </Tabs.TabPane>
       </Tabs>
     </Fragment>

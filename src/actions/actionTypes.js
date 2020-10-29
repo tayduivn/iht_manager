@@ -72,3 +72,16 @@ export const INFORMATION_USER = "INFORMATION_USER";
 export const BOAT = "BOAT";
 export const CONT = "CONT";
 export const DES_BOAT_CONT = "DES_BOAT_CONT";
+
+export const SHOW_LOADING = 'SHOW_LOADING'
+export const HIDE_LOADING = 'HIDE_LOADING'
+
+export const DROP_DOWN_CUSTOMER = "DROP_DOWN_CUSTOMER";
+export const DROP_DOWN_JOB = "DROP_DOWN_JOB";
+export const DROP_DOWN_STAFF = "DROP_DOWN_STAFF";
+export const DROP_DOWN_JOB_ORDER = "DROP_DOWN_JOB_ORDER";
+export const DROP_DOWN_CARRIER = 'DROP_DOWN_CARRIER'
+export const DROP_DOWN_AGENT = 'DROP_DOWN_AGENT'
+
+export const DELETE_JOB_FOLLOW = 'DELETE_JOB_FOLLOW'
+export const DELETE_JOB_ORDER = 'DELETE_JOB_ORDER'

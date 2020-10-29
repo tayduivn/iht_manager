@@ -22,6 +22,8 @@ import listJobOfCustomer from "./listJobOfCustomer";
 import informationUser from "./informationUser";
 import boat from "./boat";
 import itemBoatCont from "./itemBoatCont";
+import isLoading from "./isLoading";
+import dropdown from "./dropdown";
 
 const allReducer = combineReducers({
   customers,
@@ -46,7 +48,9 @@ const allReducer = combineReducers({
   listPendingKH,
   informationUser,
   boat,
-  itemBoatCont
+  itemBoatCont,
+  isLoading,
+  dropdown
 });
 
 export default allReducer;

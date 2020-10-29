@@ -1,29 +1,48 @@
-import React, { useEffect, Fragment } from "react";
+import React, { useEffect, Fragment, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  actFetchCustomersRequeset,
   actOpenDrawer,
   actGetCustomerRequeset,
   actAddCustomerRequest,
   actEditCustomerRequest,
   actCloseDrawer,
+  actFetchCustomers,
 } from "../../actions/index";
 import TableCustom from "../../components/Table";
 import { Space, Button } from "antd";
 import "./InformationCompany.css";
 import Search from "../../components/Search/index";
 import DrawerCustom from "../../components/Drawer";
+import { actHideLoading, actShowLoading } from "../../actions/actionLoading";
+import api from "../../utils/api";
 
 const InformationCustomer = () => {
   const customers = useSelector((state) => state.customers);
   const itemCustomer = useSelector((state) => state.itemCustomer);
+
+  const [total, setTotal] = useState(0);
+
   const dispatch = useDispatch();
-  const fetchCustomers = () => dispatch(actFetchCustomersRequeset());
+  const listCustomers = (data) => dispatch(actFetchCustomers(data));
   const getCustomer = (CUST_NO) => dispatch(actGetCustomerRequeset(CUST_NO));
   const openDrawer = () => dispatch(actOpenDrawer());
   const addCustomer = (customer) => dispatch(actAddCustomerRequest(customer));
   const editCustomer = (customer) => dispatch(actEditCustomerRequest(customer));
   const closeDrawer = () => dispatch(actCloseDrawer());
+
+  const showLoading = () => dispatch(actShowLoading());
+  const hideLoading = () => dispatch(actHideLoading());
+
+  const fetchCustomers = () => {
+    showLoading();
+    api("data-basic/customer/type=1/page=1", "GET", null).then((res) => {
+      if (res.status === 200) {
+        listCustomers(res.data.data);
+        setTotal(res.data.total_page);
+        hideLoading();
+      }
+    });
+  };
 
   useEffect(() => {
     fetchCustomers();
@@ -146,10 +165,21 @@ const InformationCustomer = () => {
     }
   };
 
+  const changePage = (page) => {
+    showLoading();
+    api(`data-basic/customer/type=1/page=${page}`, "GET", null).then((res) => {
+      if (res.status === 200) {
+        listCustomers(res.data.data);
+        setTotal(res.data.total_page);
+        hideLoading();
+      }
+    });
+  };
+
   return (
     <Fragment>
       {Search(searchs)}
-      {TableCustom(customers, columns)}
+      {TableCustom(customers, columns, total, changePage)}
       {DrawerCustom(fields, itemCustomer, onFinish)}
     </Fragment>
   );

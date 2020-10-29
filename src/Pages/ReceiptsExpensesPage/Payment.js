@@ -1,27 +1,47 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  actFetchPaymentsRequeset,
   actOpenModalEdit,
   actSearchAll2Request,
-  actGetPaymentRequeset, actDeletePaymentRequest
+  actGetPaymentRequeset,
+  actDeletePaymentRequest,
+  actFetchPayments,
 } from "../../actions";
 import { Space, Button } from "antd";
 import TableCustom from "../../components/Table";
 import SearchApi from "../../components/Search/SearchApi";
 import ModalPayment from "../../components/Modal/ModalPayment";
 import ModalEditPayment from "../../components/Modal/ModalEditPayment";
+import api from "../../utils/api";
+import { actHideLoading, actShowLoading } from "../../actions/actionLoading";
 
 const Payment = () => {
+  const [total, setTotal] = useState(1);
+
   const payments = useSelector((state) => state.payments);
   const dispatch = useDispatch();
-  const fetchPayments = () => dispatch(actFetchPaymentsRequeset());
+  const listPayments = (data) => dispatch(actFetchPayments(data));
   const getPayment = (LENDER_NO) => dispatch(actGetPaymentRequeset(LENDER_NO));
-  const deletePayment = (LENDER_NO) => dispatch(actDeletePaymentRequest(LENDER_NO))
+  const deletePayment = (LENDER_NO) =>
+    dispatch(actDeletePaymentRequest(LENDER_NO));
   const openModalEdit = () => dispatch(actOpenModalEdit());
   const itemJob = useSelector((state) => state.itemCustomer);
 
   const [state, setState] = useState(true);
+
+  const showLoading = () => dispatch(actShowLoading());
+  const hideLoading = () => dispatch(actHideLoading());
+
+  const fetchPayments = () => {
+    showLoading();
+    api("payment/lender/page=1", "GET", null).then((res) => {
+      if (res.status === 200) {
+        listPayments(res.data.data);
+        setTotal(res.data.total_page);
+        hideLoading();
+      }
+    });
+  };
 
   useEffect(() => {
     fetchPayments();
@@ -61,9 +81,9 @@ const Payment = () => {
               Xem
             </Button>
             <Button
-            type='primary'
+              type="primary"
               danger
-              onClick={(e) => {                
+              onClick={(e) => {
                 deletePayment(record.LENDER_NO);
               }}
             >
@@ -72,7 +92,7 @@ const Payment = () => {
           </Space>
         </>
       ),
-    },    
+    },
   ];
 
   const onSearch = (values) => {
@@ -89,10 +109,20 @@ const Payment = () => {
 
   let pay = "payment";
 
+  const changePage = (page) => {
+    showLoading();
+    api(`payment/lender/page=${page}`, "GET", null).then((res) => {
+      if (res.status === 200) {
+        listPayments(res.data.data);
+        hideLoading();
+      }
+    });
+  };
+
   return (
     <Fragment>
       {SearchApi(onSearch, state, pay)}
-      {TableCustom(payments, columns)}
+      {TableCustom(payments, columns, total, changePage)}
       {state === false ? (
         <ModalEditPayment changeEdit={changeEdit} itemJob={itemJob} />
       ) : (

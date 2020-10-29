@@ -3,6 +3,7 @@ import {
   ADD_JOB,
   SEARCH_ALL,
   EDIT_JOB,
+  DELETE_JOB_FOLLOW,
 } from "../actions/actionTypes";
 
 var initialState = [];
@@ -29,6 +30,10 @@ const jobs = (state = initialState, action) => {
     case EDIT_JOB:
       index = findIndex(state, action.job.JOB_NO);
       state[index] = action.job;
+      return [...state];
+    case DELETE_JOB_FOLLOW:
+      index = findIndex(state, action.job);
+      state.splice(index, 1)
       return [...state];
     case SEARCH_ALL:
       state = action.searchs;

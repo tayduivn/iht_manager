@@ -2,15 +2,15 @@ import { JOB_ORDER, SEARCH_ALL, ADD_JOB_ORDER } from "../actions/actionTypes";
 
 var initialState = [];
 
-// const findIndex = (data, CUST_NO) => {
-//   var result = -1;
-//   data.forEach((customer, index) => {
-//     if (customer.CUST_NO === CUST_NO) {
-//       result = index;
-//     }
-//   });
-//   return result;
-// };
+const findIndex = (data, JOB_NO) => {
+  var result = -1;
+  data.forEach((customer, index) => {
+    if (customer.JOB_NO === JOB_NO) {
+      result = index;
+    }
+  });
+  return result;
+};
 
 const joborder = (state = initialState, action) => {
   // var index = -1;

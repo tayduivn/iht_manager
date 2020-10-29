@@ -43,7 +43,6 @@ const ModalEditPayment = (props) => {
   const [form] = Form.useForm();
 
   const onFinish = (values) => {
-    console.log(values);
     const form = new FormData();
     form.append("TOTAL_AMT", values.TOTAL_AMT);
     form.append("CONTAINER_QTY", values.CONTAINER_QTY);

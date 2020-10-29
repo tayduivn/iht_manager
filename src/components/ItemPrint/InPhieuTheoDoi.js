@@ -7,7 +7,7 @@ const { Title } = Typography;
 const { Option } = Select;
 
 export default function InPhieuTheoDoi() {
-  const jobs = useSelector((state) => state.jobs);
+  const dropdown = useSelector((state) => state.dropdown);
 
   function onFinish(values) {
     window.open(
@@ -32,7 +32,7 @@ export default function InPhieuTheoDoi() {
                   0
                 }
               >
-                {jobs.map((item, index) => {
+                {dropdown.job.map((item, index) => {
                   return (
                     <Option key={index} value={item.JOB_NO}>
                       {item.JOB_NO + " | " + item.CUST_NAME}
@@ -53,7 +53,7 @@ export default function InPhieuTheoDoi() {
                   0
                 }
               >
-                {jobs.map((item, index) => {
+                {dropdown.job.map((item, index) => {
                   return (
                     <Option key={index} value={item.JOB_NO}>
                       {item.JOB_NO + " | " + item.CUST_NAME}

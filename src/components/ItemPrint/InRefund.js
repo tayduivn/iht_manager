@@ -1,12 +1,7 @@
 import React, { useEffect } from "react";
 import { Typography, Form, Button, Row, Col, Select, Input } from "antd";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  actFetchCarriersRequest,
-  actGetJobOrderRequest,
-  actFetchAgentsRequest,
-} from "../../actions";
-import { convertDateTime } from "../../utils/help";
+import { actDropDownAgentRequest, actDropDownCarrieRequest, actDropDownJobOrderRequest } from "../../actions/actionDropDownList";
 
 const { Title } = Typography;
 
@@ -14,13 +9,10 @@ const { Option } = Select;
 
 export default function InRefund() {
   const dispatch = useDispatch();
-  const fetchCarriers = () => dispatch(actFetchCarriersRequest());
-  const carriers = useSelector((state) => state.carriers);
-  const fetchJobs = () => dispatch(actGetJobOrderRequest());
-  const jobs = useSelector((state) => state.joborder);
-  const customers = useSelector((state) => state.customers);
-  const fetchAgents = () => dispatch(actFetchAgentsRequest());
-  const agents = useSelector((state) => state.agents);
+  const fetchCarriers = () => dispatch(actDropDownCarrieRequest());
+  const fetchJobs = () => dispatch(actDropDownJobOrderRequest());
+  const dropdown = useSelector((state) => state.dropdown);
+  const fetchAgents = () => dispatch(actDropDownAgentRequest());
 
   useEffect(() => {
     fetchCarriers();
@@ -88,7 +80,7 @@ export default function InRefund() {
                           .indexOf(input.toLowerCase()) >= 0
                       }
                     >
-                      {carriers.map((item, index) => {
+                      {dropdown.carrier.map((item, index) => {
                         return (
                           <Option key={index} value={item.CUST_NO}>
                             {item.CUST_NO + " | " + item.CUST_NAME}
@@ -123,7 +115,7 @@ export default function InRefund() {
                           .indexOf(input.toLowerCase()) >= 0
                       }
                     >
-                      {customers.map((item, index) => {
+                      {dropdown.customer.map((item, index) => {
                         return (
                           <Option key={index} value={item.CUST_NO}>
                             {item.CUST_NO + " | " + item.CUST_NAME}
@@ -158,7 +150,7 @@ export default function InRefund() {
                           .indexOf(input.toLowerCase()) >= 0
                       }
                     >
-                      {agents.map((item, index) => {
+                      {dropdown.agent.map((item, index) => {
                         return (
                           <Option key={index} value={item.CUST_NO}>
                             {item.CUST_NO + " | " + item.CUST_NAME}
@@ -184,10 +176,10 @@ export default function InRefund() {
                   0
                 }
               >
-                {jobs.map((item, index) => {
+                {dropdown.job_order.map((item, index) => {
                   return (
                     <Option key={index} value={item.JOB_NO}>
-                      {item.JOB_NO + "  |  " + convertDateTime(item.ORDER_DATE)}
+                      {item.JOB_NO + "  |  " + item.CUST_NAME}
                     </Option>
                   );
                 })}

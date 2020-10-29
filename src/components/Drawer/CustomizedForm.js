@@ -3,25 +3,23 @@ import { Form, Input, Divider, Row, Col, Button, Select } from "antd";
 import { convertDateTime } from "../../utils/help";
 import { useDispatch } from "react-redux";
 import {
-  actFetchStaffsRequest,
-  actFetchCustomersRequeset,
-  actFetchJobsRequest,
   actItemJobPaymentRequest,
 } from "../../actions";
+import { actDropDownCustomerRequest, actDropDownStaffRequest } from "../../actions/actionDropDownList";
 
 const { TextArea } = Input;
 const { Option } = Select;
 const CustomizedForm = ({ fields, onFinish, item }) => {
   const dispatch = useDispatch();
-  const fetchStaffs = () => dispatch(actFetchStaffsRequest());
-  const fetchCustomers = () => dispatch(actFetchCustomersRequeset());
-  const fetchJobs = () => dispatch(actFetchJobsRequest());
+  const fetchStaffs = () => dispatch(actDropDownStaffRequest());
+  const fetchCustomers = () => dispatch(actDropDownCustomerRequest());
+  // const fetchJobs = () => dispatch(actFetchJobsRequest());
   const getJob = (JOB_NO) => dispatch(actItemJobPaymentRequest(JOB_NO));
 
   useEffect(() => {
     fetchStaffs();
     fetchCustomers();
-    fetchJobs();
+    // fetchJobs();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -73,7 +71,7 @@ const CustomizedForm = ({ fields, onFinish, item }) => {
 
   const onChange = (value) => {
     // console.log(value);
-    getJob(value)
+    getJob(value);
   };
 
   const [form] = Form.useForm();
@@ -118,7 +116,7 @@ const CustomizedForm = ({ fields, onFinish, item }) => {
                   option.children.toLowerCase().indexOf(input.toLowerCase()) >=
                   0
                 }
-                onChange={onChange}              
+                onChange={onChange}
               >
                 {field.dataSelect.map((item, index) => (
                   <Option

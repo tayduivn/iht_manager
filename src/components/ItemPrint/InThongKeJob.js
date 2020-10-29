@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
 import { Typography, Form, Button, Row, Col, Select, Input } from "antd";
 import { useSelector, useDispatch } from "react-redux";
-import { actFetchInformationUser, actFetchStaffsRequest } from "../../actions";
+import { actFetchInformationUser } from "../../actions";
+import { actDropDownStaffRequest } from "../../actions/actionDropDownList";
 
 const { Title } = Typography;
 
@@ -9,12 +10,10 @@ const { Option } = Select;
 
 export default function InThongKeJob() {
   const dispatch = useDispatch();
-  const customers = useSelector((state) => state.customers);
+  const dropdown = useSelector((state) => state.dropdown);
   const fetchInformationUser = () => dispatch(actFetchInformationUser());
-  const fetchStaff = () => dispatch(actFetchStaffsRequest());
   const informationUser = useSelector((state) => state.informationUser);
   useEffect(() => {
-    fetchStaff();
     fetchInformationUser();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -76,7 +75,7 @@ export default function InThongKeJob() {
                   0
                 }
               >
-                {customers.map((item, index) => {
+                {dropdown.customer.map((item, index) => {
                   return (
                     <Option key={index} value={item.CUST_NO}>
                       {item.CUST_NO + " | " + item.CUST_NAME}

@@ -1,12 +1,29 @@
-import React, { Fragment, useEffect } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import TableCustom from '../../components/Table'
 import { useSelector, useDispatch } from 'react-redux'
-import { actFetchCostsRequest } from '../../actions'
+import {  actFetchCosts } from '../../actions'
+import { actHideLoading, actShowLoading } from '../../actions/actionLoading'
+import api from '../../utils/api'
 
 const ListCost = () => {
     const costs = useSelector(state => state.costs)
+
+    const [total, setTotal] = useState(1);
     const dispatch = useDispatch()
-    const fetchCosts = () => dispatch(actFetchCostsRequest())
+    const listCost = (data) => dispatch(actFetchCosts(data))
+
+    
+  const showLoading = () => dispatch(actShowLoading());
+  const hideLoading = () => dispatch(actHideLoading());
+
+    const fetchCosts = () => {
+        showLoading()
+        api("data-basic/type-cost/page=1", "GET", null).then(res => {
+            listCost(res.data.data);
+            setTotal(res.data.total_page);
+            hideLoading();
+        })
+    }
 
     useEffect(()=>{
         fetchCosts()
@@ -31,9 +48,19 @@ const ListCost = () => {
         }
     ]
 
+    const changePage = (page) => {
+        showLoading();
+        api(`data-basic/type-cost/page=${page}`, "GET", null).then((res) => {
+          if (res.status === 200) {
+            listCost(res.data.data);
+            hideLoading();
+          }
+        });
+      };
+
     return (
         <Fragment>
-            {TableCustom(costs, columns)}
+            {TableCustom(costs, columns, total, changePage)}
         </Fragment>
     )
 }

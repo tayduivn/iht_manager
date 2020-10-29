@@ -7,46 +7,45 @@ const { Title } = Typography;
 
 const { Option } = Select;
 
- export default function InJobOrder() {
-    const jobsOrder = useSelector((state) => state.joborder);
-    const dispatch = useDispatch();
-    const customers = useSelector((state) => state.customers);
-    const listOfCustomer = useSelector((state) => state.listJobOfCustomer);
-    const fetchListOfCustomer = (CUST_NO) =>
-      dispatch(actactListJobsOfCustomerRequest(CUST_NO));
+export default function InJobOrder() {
+  const dispatch = useDispatch();
+  const dropdown = useSelector((state) => state.dropdown);
+  const listOfCustomer = useSelector((state) => state.listJobOfCustomer);
+  const fetchListOfCustomer = (CUST_NO) =>
+    dispatch(actactListJobsOfCustomerRequest(CUST_NO));
 
-    function onFinishJobOrder(values) {
-        console.log(values);
-        if (values.SELECT === "1") {
-          window.open(
-            `https://job-api.ihtvn.com/api/v1/print/file/job-order/jobno=${values.JOB_NO}`
-          );
-        } else if (values.SELECT === "2") {
-          window.open(
-            `https://job-api.ihtvn.com/api/v1/print/file/job-order/custno=${
-              values.CUST_NO
-            }&jobno=${values.JOB_NO.toString()}`
-          );
-        } else {
-          var yearFrom = values.FROM_DATE.slice(0, 4);
-          var dayFrom = values.FROM_DATE.slice(5, 7);
-          var monthFrom = values.FROM_DATE.slice(8, 10);
-    
-          var yearTo = values.TO_DATE.slice(0, 4);
-          var dayTo = values.TO_DATE.slice(5, 7);
-          var monthTo = values.TO_DATE.slice(8, 10);
-    
-          window.open(
-            `https://job-api.ihtvn.com/api/v1/print/file/job-order/fromdate=${
-              yearFrom + monthFrom + dayFrom
-            }&todate=${yearTo + monthTo + dayTo}`
-          );
-        }
-      }
 
-    function onChangeKH(value) {
-        fetchListOfCustomer(value);
-      }
+  function onFinishJobOrder(values) {
+    if (values.SELECT === "1") {
+      window.open(
+        `https://job-api.ihtvn.com/api/v1/print/file/job-order/jobno=${values.JOB_NO}`
+      );
+    } else if (values.SELECT === "2") {
+      window.open(
+        `https://job-api.ihtvn.com/api/v1/print/file/job-order/custno=${
+          values.CUST_NO
+        }&jobno=${values.JOB_NO.toString()}`
+      );
+    } else {
+      var yearFrom = values.FROM_DATE.slice(0, 4);
+      var dayFrom = values.FROM_DATE.slice(5, 7);
+      var monthFrom = values.FROM_DATE.slice(8, 10);
+
+      var yearTo = values.TO_DATE.slice(0, 4);
+      var dayTo = values.TO_DATE.slice(5, 7);
+      var monthTo = values.TO_DATE.slice(8, 10);
+
+      window.open(
+        `https://job-api.ihtvn.com/api/v1/print/file/job-order/fromdate=${
+          yearFrom + monthFrom + dayFrom
+        }&todate=${yearTo + monthTo + dayTo}`
+      );
+    }
+  }
+
+  function onChangeKH(value) {
+    fetchListOfCustomer(value);
+  }
   return (
     <>
       <Title level={4} style={{ color: "red" }}>
@@ -85,7 +84,7 @@ const { Option } = Select;
                           .indexOf(input.toLowerCase()) >= 0
                       }
                     >
-                      {jobsOrder.map((item, index) => {
+                      {dropdown.job_order.map((item, index) => {
                         return (
                           <Option key={index} value={item.JOB_NO}>
                             {item.JOB_NO}
@@ -121,7 +120,7 @@ const { Option } = Select;
                       }
                       onChange={onChangeKH}
                     >
-                      {customers.map((item, index) => {
+                      {dropdown.customer.map((item, index) => {
                         return (
                           <Option key={index} value={item.CUST_NO}>
                             {item.CUST_NO + " | " + item.CUST_NAME}

@@ -23,7 +23,6 @@ const staffs = (state = initialState, action) => {
       state = action.staffs;
       return [...state];
     case ADD_STAFF:
-      console.log(action)
       state.unshift(action.staff);
       return [...state];
     case EDIT_STAFF:

@@ -6,8 +6,7 @@ const URL = "https://job-api.ihtvn.com/api/v1/";
 const openNotificationWithIcon = (type) => {
   notification[type]({
     message: "Notification Title",
-    description:
-      "Có lỗi xảy ra vui lòng thực hiện lại.",
+    description: "Có lỗi xảy ra vui lòng thực hiện lại.",
   });
 };
 
@@ -17,7 +16,6 @@ const api = (endpoint, method = "GET", body) => {
     url: URL + endpoint,
     data: body,
   }).catch((err) => {
-    console.log(err)
     openNotificationWithIcon("warning");
   });
 };

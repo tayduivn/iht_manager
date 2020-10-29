@@ -31,7 +31,6 @@ const ModalPaymentDebit = () => {
   
 
   const onFinish = (values) => {
-    console.log(values);
     const form = new FormData();
     form.append("JOB_NO", values.JOB_NO);
     form.append("CUST_NO", values.CUST_NO);

@@ -1,32 +1,70 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import TableCustom from "../../components/Table";
 import { Space, Button } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  actFetchJobsRequest,
   actOpenDrawer,
   actGetJobRequest,
   actAddJobRequest,
   actCloseDrawer,
   actSearchAllRequest,
   actEditJobRequest,
+  actFetchJobs,
+  actGetJob,
+  actDeleteJobFollow,
 } from "../../actions";
 import DrawerCustom from "../../components/Drawer";
 import { convertDateTime } from "../../utils/help";
 import SearchApi from "../../components/Search/SearchApi";
+import api from "../../utils/api";
+import { actHideLoading, actShowLoading } from "../../actions/actionLoading";
 
 const CreateFollow = () => {
+  const [state, setstate] = useState(0);
+
   const jobs = useSelector((state) => state.jobs);
   const itemJob = useSelector((state) => state.itemCustomer);
-  const staffs = useSelector((state) => state.staffs);
-  const customers = useSelector((state) => state.customers);
+  const dropdown = useSelector((state) => state.dropdown);
   const dispatch = useDispatch();
-  const fetchJobs = () => dispatch(actFetchJobsRequest());
+  const listJobs = (data) => dispatch(actFetchJobs(data));
   const openDrawer = () => dispatch(actOpenDrawer());
-  const getJob = (JOB_NO) => dispatch(actGetJobRequest(JOB_NO));
+  const getJobReDux = (itemJob) => dispatch(actGetJob(itemJob));
   const addFollow = (job) => dispatch(actAddJobRequest(job));
   const closeDrawer = () => dispatch(actCloseDrawer());
-  const editJob = (job) => dispatch(actEditJobRequest(job))
+  const editJob = (job) => dispatch(actEditJobRequest(job));
+  const deleteJob = (JOB_NO) => dispatch(actDeleteJobFollow(JOB_NO))
+
+  const showLoading = () => dispatch(actShowLoading());
+  const hideLoading = () => dispatch(actHideLoading());
+
+  const fetchJobs = () => {
+    showLoading();
+    api("file/job-start/page=1", "GET", null).then((res) => {
+      if (res.status === 200) {
+        listJobs(res.data.data);
+        setstate(res.data.total_page);
+        hideLoading();
+      }
+    });
+  };
+
+  const getJob = (JOB_NO) => {
+    showLoading();
+    api(`file/job-start/des/${JOB_NO}`, "GET", null).then((res) => {
+      if (res.status === 200) {
+        getJobReDux(res.data.data);
+        hideLoading();
+      }
+    });
+  };
+
+  const Delete = (JOB_NO) => {
+    var form = new FormData();
+    form.append("JOB_NO", JOB_NO);
+    api("file/job-start/remove", "POST", form).then((res) =>
+    deleteJob(JOB_NO)
+    );
+  };
 
   useEffect(() => {
     fetchJobs();
@@ -45,7 +83,6 @@ const CreateFollow = () => {
       key: "CUST_NAME",
     },
     {
-      title: "",
       key: "JOB_NO",
       render: (text, record) => (
         <>
@@ -58,6 +95,15 @@ const CreateFollow = () => {
               }}
             >
               Xem
+            </Button>
+            <Button
+              type="primary"
+              danger
+              onClick={(e) => {
+                Delete(record.JOB_NO);
+              }}
+            >
+              Xóa
             </Button>
           </Space>
         </>
@@ -77,21 +123,21 @@ const CreateFollow = () => {
       value: itemJob.CUST_NO,
       label: "Mã Khách Hàng",
       select: true,
-      dataSelect: customers,
+      dataSelect: dropdown.customer,
     },
     {
       name: "PNL_NO",
       value: itemJob.NV_CHUNGTU,
       label: "Nhân Viên Chứng Từ",
       select: true,
-      dataSelect: staffs,
+      dataSelect: dropdown.staff,
     },
     {
       name: "PNL_NO1",
       value: itemJob.NV_GIAONHAN,
       label: "Nhân Viên Giao Nhận",
       select: true,
-      dataSelect: staffs,
+      dataSelect: dropdown.staff,
     },
     {
       name: "ORDER_FROM",
@@ -169,7 +215,6 @@ const CreateFollow = () => {
   ];
 
   const onFinish = (values) => {
-    console.log(values);
     const form = new FormData();
     form.append("CUST_NO", values.CUST_NO);
     form.append("NV_CHUNGTU", values.PNL_NO);
@@ -203,18 +248,28 @@ const CreateFollow = () => {
   };
 
   const onSearch = (values) => {
-    if(values.keyword){
+    if (values.keyword) {
       dispatch(actSearchAllRequest(values.type, values.keyword));
     } else {
-      fetchJobs()
+      fetchJobs();
     }
+  };
+
+  const changePage = (page) => {
+    showLoading();
+    api(`file/job-start/page=${page}`, "GET", null).then((res) => {
+      if (res.status === 200) {
+        listJobs(res.data.data);
+        setstate(res.data.total_page);
+        hideLoading();
+      }
+    });
   };
 
   return (
     <Fragment>
-     
       {SearchApi(onSearch)}
-      {TableCustom(jobs, columns)}
+      {TableCustom(jobs, columns, state, changePage)}
       {DrawerCustom(fields, itemJob, onFinish)}
     </Fragment>
   );

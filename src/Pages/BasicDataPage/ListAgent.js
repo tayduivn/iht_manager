@@ -1,13 +1,30 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import TableCustom from "../../components/Table";
 import { useSelector, useDispatch } from "react-redux";
-import { actFetchAgentsRequest } from "../../actions";
+import { actFetchAgents } from "../../actions";
 import Search from "../../components/Search";
+import { actShowLoading, actHideLoading } from "../../actions/actionLoading";
+import api from "../../utils/api";
 
 const ListAgents = () => {
+  const [total, setTotal] = useState(1);
   const agents = useSelector((state) => state.agents);
   const dispatch = useDispatch();
-  const fetchAgents = () => dispatch(actFetchAgentsRequest());
+  const listAgents = (data) => dispatch(actFetchAgents(data));
+
+  const showLoading = () => dispatch(actShowLoading());
+  const hideLoading = () => dispatch(actHideLoading());
+
+  const fetchAgents = () => {
+    showLoading();
+    api("data-basic/customer/type=3/page=1", "GET", null).then((res) => {
+      if (res.status === 200) {
+        listAgents(res.data.data);
+        setTotal(res.data.total_page);
+        hideLoading();
+      }
+    });
+  };
 
   useEffect(() => {
     fetchAgents();
@@ -51,10 +68,20 @@ const ListAgents = () => {
     },
   ];
 
+  const changePage = (page) => {
+    showLoading();
+    api(`data-basic/customer/type=3/page=${page}`, "GET", null).then((res) => {
+      if (res.status === 200) {
+        listAgents(res.data.data);
+        hideLoading();
+      }
+    });
+  };
+
   return (
     <Fragment>
       {Search(searchs)}
-      {TableCustom(agents, columns)}
+      {TableCustom(agents, columns, total, changePage)}
     </Fragment>
   );
 };

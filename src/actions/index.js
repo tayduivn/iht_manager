@@ -58,6 +58,8 @@ const {
   BOAT,
   CONT,
   DES_BOAT_CONT,
+  DELETE_JOB_FOLLOW,
+  DELETE_JOB_ORDER,
 } = require("./actionTypes");
 
 //Cusomter
@@ -531,6 +533,20 @@ export const actAddJobRequest = (job) => {
   };
 };
 
+export const actDeleteJobFollow = (job) => {
+  return {
+    type: DELETE_JOB_FOLLOW,
+    job,
+  };
+};
+
+export const actDeleteJobOrder = (job) => {
+  return {
+    type: DELETE_JOB_ORDER,
+    job,
+  };
+};
+
 export const actEditJob = (job) => {
   return {
     type: EDIT_JOB,
@@ -651,7 +667,7 @@ export const actListApproved = (listApproved) => {
 
 export const actListApprovedRequest = () => {
   return (dispatch) => {
-    return api("file/approved/list-approved", "GET", null).then((res) => {
+    return api("file/approved/list-approved/page=1", "GET", null).then((res) => {
       dispatch(actListApproved(res.data.data));
     });
   };
@@ -763,26 +779,10 @@ export const actListPendingKH = (listPendingKH) => {
   };
 };
 
-export const actListPendingKHRequest = () => {
-  return (dispatch) => {
-    return api("payment/paid-debit/list-pending", "GET", null).then((res) => {
-      dispatch(actListPendingKH(res.data.data));
-    });
-  };
-};
-
 export const actListPaidKH = (listPaidKH) => {
   return {
     type: LIST_PAID_KH,
     listPaidKH,
-  };
-};
-
-export const actListPaidKHRequest = () => {
-  return (dispatch) => {
-    return api("payment/paid-debit/list-paid", "GET", null).then((res) => {
-      dispatch(actListPaidKH(res.data.data));
-    });
   };
 };
 
