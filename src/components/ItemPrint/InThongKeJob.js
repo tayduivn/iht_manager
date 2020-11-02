@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { Typography, Form, Button, Row, Col, Select, Input } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import { actFetchInformationUser } from "../../actions";
-import { actDropDownStaffRequest } from "../../actions/actionDropDownList";
 
 const { Title } = Typography;
 

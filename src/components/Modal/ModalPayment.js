@@ -194,10 +194,7 @@ const ModalPayment = () => {
           </Col>
         </Row>
         <Form.Item style={{ textAlign: "right" }}>
-          <Button
-            type="primary"
-            htmlType="submit"         
-          >
+          <Button type="primary" htmlType="submit">
             Lưu
           </Button>
         </Form.Item>

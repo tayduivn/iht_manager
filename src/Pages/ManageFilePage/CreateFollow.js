@@ -4,7 +4,6 @@ import { Space, Button } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import {
   actOpenDrawer,
-  actGetJobRequest,
   actAddJobRequest,
   actCloseDrawer,
   actSearchAllRequest,
@@ -32,7 +31,7 @@ const CreateFollow = () => {
   const addFollow = (job) => dispatch(actAddJobRequest(job));
   const closeDrawer = () => dispatch(actCloseDrawer());
   const editJob = (job) => dispatch(actEditJobRequest(job));
-  const deleteJob = (JOB_NO) => dispatch(actDeleteJobFollow(JOB_NO))
+  const deleteJob = (JOB_NO) => dispatch(actDeleteJobFollow(JOB_NO));
 
   const showLoading = () => dispatch(actShowLoading());
   const hideLoading = () => dispatch(actHideLoading());
@@ -61,9 +60,7 @@ const CreateFollow = () => {
   const Delete = (JOB_NO) => {
     var form = new FormData();
     form.append("JOB_NO", JOB_NO);
-    api("file/job-start/remove", "POST", form).then((res) =>
-    deleteJob(JOB_NO)
-    );
+    api("file/job-start/remove", "POST", form).then((res) => deleteJob(JOB_NO));
   };
 
   useEffect(() => {

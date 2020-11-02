@@ -74,6 +74,9 @@ const PaymentRequest = () => {
             >
               Xem
             </Button>
+            <Button type="primary" danger>
+              Xóa
+            </Button>
           </Space>
         </>
       ),

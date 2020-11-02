@@ -7,7 +7,7 @@ import {
   actDeletePaymentRequest,
   actFetchPayments,
 } from "../../actions";
-import { Space, Button } from "antd";
+import { Space, Button, Spin } from "antd";
 import TableCustom from "../../components/Table";
 import SearchApi from "../../components/Search/SearchApi";
 import ModalPayment from "../../components/Modal/ModalPayment";
@@ -121,6 +121,8 @@ const Payment = () => {
 
   return (
     <Fragment>
+      <Spin size='large' spinning={false}>
+
       {SearchApi(onSearch, state, pay)}
       {TableCustom(payments, columns, total, changePage)}
       {state === false ? (
@@ -128,6 +130,7 @@ const Payment = () => {
       ) : (
         <ModalPayment />
       )}
+      </Spin>
     </Fragment>
   );
 };

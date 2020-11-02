@@ -7,7 +7,6 @@ import {
   actGetJobRequest,
   actAddJobOrderRequest,
 } from "../../actions";
-// import _ from "lodash";
 
 const { Option } = Select;
 
