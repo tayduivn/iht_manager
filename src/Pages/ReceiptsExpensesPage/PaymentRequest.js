@@ -7,6 +7,7 @@ import {
   actOpenModalEdit,
   actGetDebitDesRequest,
   actSearchAllDebitRequest,
+  actDeleteDebitNote,
 } from "../../actions";
 import SearchApi from "../../components/Search/SearchApi";
 import ModalPaymentDebit from "../../components/Modal/ModalPaymentDebit";
@@ -22,6 +23,7 @@ const PaymentRequest = () => {
   const listPaymentDebit = (data) => dispatch(actPaymentDebit(data));
   const openModalEdit = () => dispatch(actOpenModalEdit());
   const getJobOrder = (JOB_NO) => dispatch(actGetDebitDesRequest(JOB_NO));
+  const delteDebitNote = (JOB_NO) => dispatch(actDeleteDebitNote(JOB_NO));
 
   const itemJob = useSelector((state) => state.itemCustomer);
 
@@ -45,6 +47,16 @@ const PaymentRequest = () => {
     fetchPaymentDebit();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const Delete = (JOB_NO) => {
+    var form = new FormData();
+    form.append("JOB_NO", JOB_NO);
+    api("payment/debit-note/remove", "POST", form).then((res) => {
+      if (res.data.success === true) {
+        delteDebitNote(JOB_NO);
+      }
+    });
+  };
 
   const columns = [
     {
@@ -74,7 +86,13 @@ const PaymentRequest = () => {
             >
               Xem
             </Button>
-            <Button type="primary" danger>
+            <Button
+              type="primary"
+              danger
+              onClick={() => {
+                Delete(record.JOB_NO);
+              }}
+            >
               Xóa
             </Button>
           </Space>

@@ -60,6 +60,7 @@ const {
   DES_BOAT_CONT,
   DELETE_JOB_FOLLOW,
   DELETE_JOB_ORDER,
+  DELETE_DEBIT_NOTE,
 } = require("./actionTypes");
 
 //Cusomter
@@ -667,9 +668,11 @@ export const actListApproved = (listApproved) => {
 
 export const actListApprovedRequest = () => {
   return (dispatch) => {
-    return api("file/approved/list-approved/page=1", "GET", null).then((res) => {
-      dispatch(actListApproved(res.data.data));
-    });
+    return api("file/approved/list-approved/page=1", "GET", null).then(
+      (res) => {
+        dispatch(actListApproved(res.data.data));
+      }
+    );
   };
 };
 
@@ -889,5 +892,12 @@ export const actDesBoatContRequest = (type, value) => {
     ).then((res) => {
       dispatch(actDesBoatCont(res.data.data));
     });
+  };
+};
+
+export const actDeleteDebitNote = (JOB_NO) => {
+  return {
+    type: DELETE_DEBIT_NOTE,
+    JOB_NO,
   };
 };

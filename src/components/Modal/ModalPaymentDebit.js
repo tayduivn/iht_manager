@@ -5,10 +5,10 @@ import {
   actCloseModal,
   actFetchCarriersRequest,
   actFetchAgentsRequest,
-  actDebitNoteNoteCreateRequest,
-  actGetDebitNotCreateRequest,
   atctAddPaymentDebitRequest,
+  actItemJobPaymentRequest,
 } from "../../actions";
+import { actDropDownJobRequest } from "../../actions/actionDropDownList";
 // import _ from "lodash";
 
 const { Option } = Select;
@@ -17,15 +17,15 @@ const ModalPaymentDebit = () => {
   const dispatch = useDispatch();
   const closeModal = () => dispatch(actCloseModal());
   const stateModal = useSelector((state) => state.isDrawer);
-  const jobs = useSelector((state) => state.jobsnco);
+  const dropdown = useSelector((state) => state.dropdown);
   const fetchJobNotCreateOrder = () =>
-    dispatch(actDebitNoteNoteCreateRequest());
-  const getJob = (JOB_NO) => dispatch(actGetDebitNotCreateRequest(JOB_NO));
+    dispatch(actDropDownJobRequest());
+  const getJob = (JOB_NO) => dispatch(actItemJobPaymentRequest(JOB_NO));
   const getCarrier = () => dispatch(actFetchCarriersRequest());
   const getAgent = () => dispatch(actFetchAgentsRequest());
   const carriers = useSelector((state) => state.carriers);
   const agents = useSelector((state) => state.agents);
-  const itemJob = useSelector((state) => state.itemCustomer);
+  const itemJob = useSelector((state) => state.itemJobPayment);
   const addJobOrder = (value) => dispatch(atctAddPaymentDebitRequest(value));
 
   
@@ -67,6 +67,7 @@ const ModalPaymentDebit = () => {
   const onChange = (values) => {
     getJob(values);
   };
+
 
   const fields = [
     { name: "JOB_NO", value: itemJob.JOB_NO },    
@@ -183,7 +184,7 @@ const ModalPaymentDebit = () => {
                 }
                 onChange={onChange}
               >
-                {jobs.map((item, index) => {
+                {dropdown.job.map((item, index) => {
                   return (
                     <Option key={index} value={item.JOB_NO}>
                       {item.JOB_NO}

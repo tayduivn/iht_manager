@@ -2,8 +2,8 @@ import Axios from "axios";
 import { notification } from "antd";
 
 
-// const URL = "https://job-api.ihtvn.com/api/v1/";
-const URL = "http://192.168.1.45:88/JobIHT/v1/"
+const URL = "https://job-api.ihtvn.com/api/v1/";
+// const URL = "http://192.168.1.45:88/JobIHT/v1/"
 
 const openNotificationWithIcon = (type) => {
   notification[type]({
